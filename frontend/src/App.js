@@ -2,6 +2,8 @@ import './App.css';
 
 import { useEffect } from 'react';
 import axios from 'axios';
+import { Route, Routes } from 'react-router-dom';
+import Homepage from './pages/Homepage';
 
 function App() {
 
@@ -14,7 +16,9 @@ function App() {
 
   return (
     <div className="App">
-        Nasa aplikacija!
+        <Routes>
+            <Route path='/' element={<Homepage />} />
+        </Routes>
     </div>
   );
 }
