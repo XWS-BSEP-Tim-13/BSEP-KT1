@@ -1,0 +1,22 @@
+.page {
+    display: flex;
+    height: 100vh;
+}
+
+
+.image {
+    width: 45%;
+    background: url('../../images/login.jpg') right/cover;
+    opacity: 0.7;
+    height: 100%;
+}
+
+@media (max-width: 40rem) {
+    .page {
+        flex-direction: column-reverse;
+    }
+
+    .image {
+        width: 100%;
+    }
+}

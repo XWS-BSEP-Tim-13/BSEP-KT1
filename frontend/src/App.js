@@ -3,7 +3,7 @@
 import { Route, Routes } from 'react-router-dom';
 
 import Homepage from './pages/Homepage/Homepage';
-import Login from './pages/Login/Login';
+import Mainpage from './pages/Mainpage/Mainpage';
 
 import './App.css';
 
@@ -20,7 +20,7 @@ function App() {
   return (
     <div className="App">
         <Routes>
-            <Route path='/' element={<Login />} />
+            <Route path='/' element={<Mainpage />} />
             <Route path='/home' element={<Homepage />} />
         </Routes>
     </div>
