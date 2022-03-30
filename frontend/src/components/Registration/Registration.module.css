@@ -29,6 +29,8 @@ h1 {
     width: 22rem;
     font-size: 1rem;
     margin-left: 0.5rem;
+    font-family: inherit;
+    padding: 0 0.5rem;
 }
 
 .formItem input:focus {
@@ -45,6 +47,7 @@ h1 {
     background-color: rgb(53, 108, 145);
     color: white;
     border: none;
+    font-family: inherit;
 }
 
 .registerLink {
