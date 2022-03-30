@@ -48,6 +48,14 @@ h1 {
     color: white;
     border: none;
     font-family: inherit;
+    cursor: pointer;
+}
+
+.buttonLogIn:hover,
+.buttonLogIn:active {
+    color: rgb(53, 108, 145);
+    background-color: rgba(53, 108, 145, 0.3);
+    border: 1px solid rgb(53, 108, 145);
 }
 
 .registerLink {

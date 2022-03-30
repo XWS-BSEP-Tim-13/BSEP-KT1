@@ -1,4 +1,6 @@
-function Homepage() {
+
+
+function Homepage(props) {
     return (
         <div>
             Nasa aplikacija!
