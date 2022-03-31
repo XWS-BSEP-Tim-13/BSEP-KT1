@@ -8,8 +8,8 @@ function Navbar() {
                 <Link to="/home" className={classes.link} >Home</Link>
             </div>
             <div>
-                <Link to="/allSertificates" className={classes.link} >All Sertificates</Link>
-                <Link to="/newSertificate" className={classes.link} >New Sertificate</Link>
+                <Link to="/allCertificates" className={classes.link} >All Certificates</Link>
+                <Link to="/newCertificate" className={classes.link} >New Certificate</Link>
             </div>
         </nav>
     );

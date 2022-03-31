@@ -3,7 +3,7 @@
 function Homepage(props) {
     return (
         <div>
-            Nasa aplikacija!
+            Homepage
         </div>
     );
 }
