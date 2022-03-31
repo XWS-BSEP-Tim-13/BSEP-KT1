@@ -9,10 +9,10 @@ function NewCertificate() {
         <div className={classes.page}>
             <div className={classes.title}>
                 <FontAwesomeIcon icon={faKey} />
-                <h1>Add New Certificate</h1>
+                <h1 className={classes.titleText}>Add New Certificate</h1>
             </div>
 
-            <form>
+            <form className={classes.form}>
                 <div className={classes.formRow}>
                     <div className={classes.formColumn}>
                         <input type='text' required placeholder='Subject' />
