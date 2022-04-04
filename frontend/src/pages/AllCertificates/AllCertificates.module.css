@@ -10,28 +10,56 @@
     display: flex;
     justify-content: space-around;
     width: 100%;
+    margin: 1.5rem 0;
 }
 
-.options input {
-    display: none;
-}
-
-.options > div {
-    background-color: rgb(255, 239, 233);
+.option {
+    background-color: #e9f5ff;
+    color: #244861;
     width: 30%;
     height: 2.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
-
+    border: none;
     cursor: pointer;
 }
 
-.options label {
-    cursor: pointer;
-    font-weight: bold;
+.option:hover,
+.option:active {
+    background-color: #244861;
+    color: white;
 }
 
-input[type="radio"]:checked + label {
-    color: rgb(156, 58, 18);
+.certificates {
+    margin: 1.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.certificate {
+    box-shadow: 3px 3px 10px #acacac;
+    width: 30%;
+    margin: 1.6% 0;
+}
+
+.certificate:hover,
+.certificate:active {
+    cursor: pointer;
+    box-shadow: 5px 5px 20px #585858;
+}
+
+.certificate > img {
+    width: 20%;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.certificate > p {
+    font-size: 0.9rem;
+    margin: 0;
+    padding: 0.5rem 0;
+    border-top: 1px solid #e7e7e7 ;
+    color: #3e3e3e;
 }

@@ -22,7 +22,7 @@ h1 {
 }
 
 .formItem input {
-    background-color: rgb(235, 235, 235);
+    background-color: #ebebeb;
     border: none;
     border-bottom: 2px solid #ccc;
     height: 2rem;
@@ -44,7 +44,7 @@ h1 {
     margin-bottom: 1rem;
     height: 3rem;
     font-size: 1rem;
-    background-color: rgb(53, 108, 145);
+    background-color: #356c91;
     color: white;
     border: none;
     font-family: inherit;
@@ -53,14 +53,14 @@ h1 {
 
 .buttonLogIn:hover,
 .buttonLogIn:active {
-    color: rgb(53, 108, 145);
+    color: #356c91;
     background-color: rgba(53, 108, 145, 0.3);
-    border: 1px solid rgb(53, 108, 145);
+    border: 1px solid #356c91;
 }
 
 .registerLink {
     font-size: 0.8rem;
-    color: rgb(36, 72, 97);
+    color: #244861;
     align-self: center;
 }
 

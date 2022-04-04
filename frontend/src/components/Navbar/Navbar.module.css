@@ -4,7 +4,7 @@
     align-items: center;
 
     height: 3rem;
-    background-color: rgb(53, 108, 145);
+    background-color: #356c91;
     color: white;
     padding: 0 2rem;
 }
@@ -18,5 +18,5 @@
 .link:hover,
 .link:active {
     background-color: rgba(255, 255, 255, 0.6);
-    color: rgb(53, 108, 145);
+    color: #356c91;
 }

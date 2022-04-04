@@ -38,7 +38,7 @@
 .formColumn > * {
     width: 90%;
     margin: 1rem 0;
-    background-color: rgb(235, 235, 235);
+    background-color: #ebebeb;
     border: none;
     border-bottom: 2px solid #ccc;
     height: 2rem;
@@ -59,7 +59,7 @@
     margin-bottom: 1rem;
     height: 3rem;
     font-size: 1rem;
-    background-color: rgb(53, 108, 145);
+    background-color: #356c91;
     color: white;
     border: none;
     font-family: inherit;
@@ -68,7 +68,7 @@
 
 .button:hover,
 .button:active {
-    color: rgb(53, 108, 145);
+    color: #356c91;
     background-color: rgba(53, 108, 145, 0.3);
-    border: 1px solid rgb(53, 108, 145);
+    border: 1px solid #356c91;
 }
