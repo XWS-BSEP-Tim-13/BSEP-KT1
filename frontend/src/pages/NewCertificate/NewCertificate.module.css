@@ -72,3 +72,18 @@
     background-color: rgba(53, 108, 145, 0.3);
     border: 1px solid #356c91;
 }
+
+@media (max-width: 40rem) {
+    .formRow {
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .formColumn {
+        padding: 0;
+    }
+
+    .formColumn select {
+        width: 95%;
+    }
+}

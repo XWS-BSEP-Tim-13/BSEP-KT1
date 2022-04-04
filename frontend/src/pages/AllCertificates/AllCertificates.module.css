@@ -63,3 +63,23 @@
     border-top: 1px solid #e7e7e7 ;
     color: #3e3e3e;
 }
+
+@media (max-width: 40rem) {
+    .options {
+        flex-direction: column;
+    }
+
+    .option {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+
+    .certificates {
+        flex-direction: column;
+    }
+
+    .certificate {
+        width: 100%;
+        margin: 1rem 0;
+    }
+}
