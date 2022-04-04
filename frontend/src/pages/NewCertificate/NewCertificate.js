@@ -16,8 +16,8 @@ function NewCertificate() {
                 <div className={classes.formRow}>
                     <div className={classes.formColumn}>
                         <input type='text' required placeholder='Subject' />
-                        <select name="Issuer">
-                            <option value="" disabled selected>Issuer</option>
+                        <select name="Issuer" defaultValue="">
+                            <option value="" disabled>Issuer</option>
                             <option value="first">First option</option>
                             <option value="second">Second option</option>
                             <option value="third">Third option</option>

@@ -50,7 +50,7 @@ function AllCertificates() {
             <div className={classes.certificates}>
                 {
                     certificates.map((certificate) => {
-                        return <div className={classes.certificate}>
+                        return <div className={classes.certificate} key={certificate.subject}>
                             <img src={require('../../images/certificate.png')} alt='Certificate'/>
                             <p>Subject: {certificate.subject}</p>
                             <p>Issuer: {certificate.issuer}</p>
