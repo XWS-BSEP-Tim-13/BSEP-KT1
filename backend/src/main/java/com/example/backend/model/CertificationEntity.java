@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.List;
 
 @Entity
@@ -13,17 +15,34 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisteredUser extends BaseEntity{
-    @Column(name="name", nullable = false)
-    private String name;
-    @Column(name="surname", nullable = false)
-    private String surname;
+public class CertificationEntity extends BaseEntity{
+
+    @Column(nullable = false)
+    private String commonName;
+
     @Column(name="email", unique = true, nullable = false)
     private String email;
+
     @Column(name="password", nullable = false)
     private String password;
+
     @Column(name="salt", nullable = false)
     private String salt;
+
     @OneToMany(mappedBy = "subject")
     private List<Certificate> certificates;
+
+    private String organization;
+
+    private String organizationUnit;
+
+    private String countryCode;
+
+    private boolean isSubsystem;
+
+    @Transient
+    private PrivateKey privateKey;
+
+    @Column(nullable = false)
+    private PublicKey publicKey;
 }
