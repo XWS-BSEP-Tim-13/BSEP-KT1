@@ -1,6 +1,7 @@
 package com.example.backend.model;
 
 import com.example.backend.enums.EntityRole;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +29,8 @@ public class CertificationEntity extends BaseEntity{
     @Column(name="password", nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "subject")
+    @OneToMany(mappedBy = "subject",cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("subject")
     private List<Certificate> certificates = new ArrayList<>();
 
     private String organization;
@@ -38,8 +40,6 @@ public class CertificationEntity extends BaseEntity{
     private String countryCode;
 
     private EntityRole entityRole;
-
-    private String alias;
 
     @Transient
     private PrivateKey privateKey;

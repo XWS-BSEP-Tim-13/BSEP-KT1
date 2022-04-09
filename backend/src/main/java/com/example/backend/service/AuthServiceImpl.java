@@ -33,12 +33,12 @@ public class AuthServiceImpl implements AuthService {
 
         CertificationEntity certificationEntity = modelMapper.map(registrationEntity, CertificationEntity.class);
 
-        certificationEntity.setAlias(UUID.randomUUID().toString());
+        //certificationEntity.setAlias(UUID.randomUUID().toString());
         certificationEntity.setPrivateKey(keyPair.getPrivate());
         certificationEntity.setPublicKey(keyPair.getPublic());
 
         keystoreHandler.loadKeyStore(null, "123".toCharArray());
-        keystoreHandler.writePrivateKey(certificationEntity.getAlias(), certificationEntity.getPrivateKey(), "123".toCharArray());
+       // keystoreHandler.writePrivateKey(certificationEntity.getAlias(), certificationEntity.getPrivateKey(), "123".toCharArray());
         keystoreHandler.saveKeyStore("keystore/" + certificationEntity.getOrganization(), "123".toCharArray());
 
         certificationEntityRepository.save(certificationEntity);
