@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,11 +27,8 @@ public class CertificationEntity extends BaseEntity{
     @Column(name="password", nullable = false)
     private String password;
 
-    @Column(name="salt", nullable = false)
-    private String salt;
-
     @OneToMany(mappedBy = "subject")
-    private List<Certificate> certificates;
+    private List<Certificate> certificates = new ArrayList<>();
 
     private String organization;
 
@@ -39,6 +37,8 @@ public class CertificationEntity extends BaseEntity{
     private String countryCode;
 
     private boolean isSubsystem;
+
+    private String alias;
 
     @Transient
     private PrivateKey privateKey;
