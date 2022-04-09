@@ -56,7 +56,16 @@
 			<artifactId>bcpkix-jdk15on</artifactId>
 			<version>1.64</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>net.minidev</groupId>
+            <artifactId>json-smart</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>2.4.4</version>
+		</dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

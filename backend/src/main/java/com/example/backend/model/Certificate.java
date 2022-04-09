@@ -1,6 +1,7 @@
 package com.example.backend.model;
 
 import com.example.backend.enums.CertificateType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Certificate extends BaseEntity{
     @ManyToOne
     @JoinColumn(name="subject")
@@ -18,6 +20,7 @@ public class Certificate extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name="parent_certificate")
+    @JsonIgnoreProperties("certificates")
     private Certificate parentCertificate;
 
     @Column(name="issuing_date")
@@ -42,4 +45,6 @@ public class Certificate extends BaseEntity{
 
     @Column(name = "isCA", nullable = false)
     private boolean isCA;
+
+    private String alias;
 }
