@@ -16,12 +16,15 @@ h1 {
     font-size: 3.5rem;
 }
 
-.formItem {
+.formItem,
+.select {
     font-size: 1rem;
     margin: 0.5rem 0;
 }
 
-.formItem input {
+.formItem input,
+.checkbox,
+.select {
     background-color: #ebebeb;
     border: none;
     border-bottom: 2px solid #ccc;
@@ -29,6 +32,21 @@ h1 {
     width: 22rem;
     font-size: 1rem;
     margin-left: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.checkbox {
+    border-bottom: 2px solid #ebebeb;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: #333333;
+}
+
+.checkbox > input {
+    margin: 0;
+    margin-right: 0.5rem;
+    width: auto;
 }
 
 .formItem input:focus {
@@ -67,8 +85,14 @@ h1 {
         font-size: 3rem;
     }
 
-    .formItem input {
+    .formItem input,
+    .checkbox,
+    .select {
         width: 19rem;
+    }
+
+    .checkbox > input {
+        width: auto;
     }
 }
 
@@ -77,6 +101,6 @@ h1 {
     .login {
         width: 100%;
         margin-top: 2vh;
-        margin-bottom: 15vh;
+        margin-bottom: 10vh;
     }
 }
