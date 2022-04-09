@@ -1,5 +1,6 @@
 package com.example.backend.dto;
 
+import com.example.backend.enums.EntityRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -14,5 +15,5 @@ public class RegistrationEntityDTO {
     private String organizationUnit;
     private String countryCode;
     private String password;
-    private Boolean isSubsystem;
+    private EntityRole entityRole;
 }

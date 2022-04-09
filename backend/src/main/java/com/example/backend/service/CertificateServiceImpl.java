@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.dto.CreationCertificateDto;
 import com.example.backend.enums.CertificateType;
+import com.example.backend.enums.EntityRole;
 import com.example.backend.keystores.KeystoreReader;
 import com.example.backend.keystores.KeystoreHandler;
 import com.example.backend.model.CertificationEntity;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.security.KeyPair;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.util.Calendar;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -27,33 +29,37 @@ public class CertificateServiceImpl implements CertificateService {
         KeyPair issuerKeyPair = keyPairGenerator.generateKeyPair();
         KeyPair subjectKeyPair = keyPairGenerator.generateKeyPair();
         CertificationEntity subjectData = CertificationEntity.builder()
-                .commonName("Subject Testic")
+                .commonName("Admin")
                 .countryCode("RS")
                 .email("a@a.com")
                 .organization("FTN")
-                .isSubsystem(false)
-                .password("bla")
-                .organizationUnit("Katedra")
-                .publicKey(subjectKeyPair.getPublic())
+                .entityRole(EntityRole.ADMIN)
+                .password("123")
+                .organizationUnit("Katedra za automatiku")
+                .publicKey(issuerKeyPair.getPublic())
                 .build();
         subjectData.setId(1L);
 
         CertificationEntity issuerData = CertificationEntity.builder()
-                .commonName("Issuer Issueric")
+                .commonName("Admin")
                 .countryCode("RS")
-                .email("b@a.com")
+                .email("a@a.com")
                 .organization("FTN")
-                .isSubsystem(false)
-                .password("bla")
-                .organizationUnit("Katedra")
+                .entityRole(EntityRole.ADMIN)
+                .password("123")
+                .organizationUnit("Katedra za automatiku")
                 .privateKey(issuerKeyPair.getPrivate())
                 .build();
-        issuerData.setId(2L);
+        issuerData.setId(1L);
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, 30);
+        Date endDate = cal.getTime();
 
         CreationCertificateDto creationCertificateDto = CreationCertificateDto.builder()
-                .certificateType(CertificateType.INTERMEDIATE)
-                .expiringDate(new Date())
-                .purpose("Neka namena")
+                .certificateType(CertificateType.SELF_SIGNED)
+                .expiringDate(endDate)
+                .purpose("Proves your identity to a remote computer")
                 .build();
 
         X509Certificate generatedCertificate = certificateGenerator.generateCertificate(subjectData, issuerData, creationCertificateDto);
@@ -62,8 +68,8 @@ public class CertificateServiceImpl implements CertificateService {
         //keystoreHandler.saveKeyStore("keystore/test.jks", "123".toCharArray());
 
         keystoreHandler.write("alias", issuerKeyPair.getPrivate(), "123".toCharArray(), generatedCertificate);
-        keystoreHandler.saveKeyStore("keystore/test.jks", "123".toCharArray());
-        Certificate loadedCertificate = keystoreHandler.readCertificate("keystore/test.jks", "123", "alias");
+        keystoreHandler.saveKeyStore("keystore/admin.jks", "123".toCharArray());
+        Certificate loadedCertificate = keystoreHandler.readCertificate("keystore/admin.jks", "123", "alias");
 
     }
 }

@@ -47,39 +47,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private Certificate generateRegistrationCertificate(){
-        KeyPair issuerKeyPair = keyPairGenerator.generateKeyPair();
-        KeyPair subjectKeyPair = keyPairGenerator.generateKeyPair();
-        CertificationEntity subjectData = CertificationEntity.builder()
-                .commonName("Subject Testic")
-                .countryCode("RS")
-                .email("a@a.com")
-                .organization("FTN")
-                .isSubsystem(false)
-                .password("bla")
-                .organizationUnit("Katedra")
-                .publicKey(subjectKeyPair.getPublic())
-                .build();
-        subjectData.setId(1L);
 
-        CertificationEntity issuerData = CertificationEntity.builder()
-                .commonName("Issuer Issueric")
-                .countryCode("RS")
-                .email("b@a.com")
-                .organization("FTN")
-                .isSubsystem(false)
-                .password("bla")
-                .organizationUnit("Katedra")
-                .privateKey(issuerKeyPair.getPrivate())
-                .build();
-        issuerData.setId(2L);
-
-        CreationCertificateDto creationCertificateDto = CreationCertificateDto.builder()
-                .certificateType(CertificateType.INTERMEDIATE)
-                .expiringDate(new Date())
-                .purpose("Neka namena")
-                .build();
-
-        X509Certificate generatedCertificate = certificateGenerator.generateCertificate(subjectData, issuerData, creationCertificateDto);
         return null;
     }
 

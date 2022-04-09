@@ -1,5 +1,6 @@
 package com.example.backend.model;
 
+import com.example.backend.enums.EntityRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,7 +37,7 @@ public class CertificationEntity extends BaseEntity{
 
     private String countryCode;
 
-    private boolean isSubsystem;
+    private EntityRole entityRole;
 
     private String alias;
 
