@@ -63,24 +63,24 @@
     margin-right: 0.5rem;
 }
 
-.checkbox > value {
+.checkbox > label {
     text-align: left;
 }
 
-@media (max-width: 90rem) {
-    .checkbox > value {
+@media (max-width: 80rem) {
+    .checkbox > label {
         font-size: 0.9rem;
     }
 }
 
-@media (max-width: 80rem) {
-    .checkbox > value {
+@media (max-width: 75rem) {
+    .checkbox > label {
         font-size: 0.8rem;
     }
 }
 
 @media (max-width: 50rem) {
-    .checkbox > value {
+    .checkbox > label {
         font-size: 0.7rem;
     }
 }
@@ -128,14 +128,14 @@
         width: 95%;
     }
 
-    .checkbox > value {
+    .checkbox > label {
         font-size: 0.8rem;
     }
 }
 
 @media (max-width: 22rem) {
 
-    .checkbox > value {
+    .checkbox > label {
         font-size: 0.7rem;
     }
 }

@@ -39,23 +39,23 @@ function NewCertificate() {
                     <div className={classes.formColumn}>
                         <div className={classes.checkbox}>
                             <input type='checkbox' id="provesIdentity" />
-                            <value for="provesIdentity">Proves the identity to a remote computer</value>
+                            <label htmlFor="provesIdentity">Proves the identity to a remote computer</label>
                         </div>
                         <div className={classes.checkbox}>
                             <input type='checkbox' id="ensuresIdentity" />
-                            <value for="ensuresIdentity">Ensures the idnetity of a remote computer</value>
+                            <label htmlFor="ensuresIdentity">Ensures the idnetity of a remote computer</label>
                         </div>
                         <div className={classes.checkbox}>
                             <input type='checkbox' id="encryptedData" />
-                            <value for="encryptedData">Allows data on disk to be encrypted</value>
+                            <label htmlFor="encryptedData">Allows data on disk to be encrypted</label>
                         </div>
                         <div className={classes.checkbox}>
                             <input type='checkbox' id="emailMessages" />
-                            <value for="emailMessages">Protects e-mail messages</value>
+                            <label htmlFor="emailMessages">Protects e-mail messages</label>
                         </div>
                         <div className={classes.checkbox}>
                             <input type='checkbox' id="secureCommunication" />
-                            <value for="secureCommunication">Allows secure communication on the Internet</value>
+                            <label htmlFor="secureCommunication">Allows secure communication on the Internet</label>
                         </div>
                     </div>
                 </div>
