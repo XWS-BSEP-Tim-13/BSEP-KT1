@@ -20,7 +20,9 @@ import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CertificateGenerator {
 
     public X509Certificate generateCertificate(CertificationEntity subjectData, CertificationEntity issuerData, CreationCertificateDto certificateDto) {
@@ -37,7 +39,7 @@ public class CertificateGenerator {
 
             //Postavljaju se podaci za generisanje sertifiakta
             X509v3CertificateBuilder certGen = new JcaX509v3CertificateBuilder(generateX500Name(issuerData),
-                    new BigInteger(String.valueOf(UUID.randomUUID())),
+                    new BigInteger(String.valueOf(System.currentTimeMillis())),
                     new Date(),
                     certificateDto.getExpiringDate(),
                     generateX500Name(subjectData),
