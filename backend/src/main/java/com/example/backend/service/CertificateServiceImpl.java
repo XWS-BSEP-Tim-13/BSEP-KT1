@@ -9,9 +9,11 @@ import com.example.backend.model.CertificationEntity;
 import com.example.backend.service.interfaces.CertificateService;
 import com.example.backend.util.CertificateGenerator;
 import com.example.backend.util.KeyPairGenerator;
+import com.example.backend.util.ParseCertificate;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.x500.X500Principal;
 import java.security.KeyPair;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
@@ -24,6 +26,7 @@ public class CertificateServiceImpl implements CertificateService {
     private final CertificateGenerator certificateGenerator;
     private final KeyPairGenerator keyPairGenerator;
     private final KeystoreHandler keystoreHandler;
+    private final ParseCertificate parseCertificate;
 
     public void test(){
         KeyPair issuerKeyPair = keyPairGenerator.generateKeyPair();
@@ -69,7 +72,8 @@ public class CertificateServiceImpl implements CertificateService {
 
         keystoreHandler.write("alias", issuerKeyPair.getPrivate(), "123".toCharArray(), generatedCertificate);
         keystoreHandler.saveKeyStore("keystore/admin.jks", "123".toCharArray());
-        Certificate loadedCertificate = keystoreHandler.readCertificate("keystore/admin.jks", "123", "alias");
-
+        X509Certificate loadedCertificate = keystoreHandler.readCertificate("keystore/admin.jks", "123", "alias");
+        X500Principal pr = loadedCertificate.getIssuerX500Principal();
+        CertificationEntity en = parseCertificate.parseX500Principal(pr);
     }
 }

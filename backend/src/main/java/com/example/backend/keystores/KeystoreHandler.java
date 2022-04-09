@@ -113,14 +113,14 @@ public class KeystoreHandler {
     /**
      * Ucitava sertifikat is KS fajla
      */
-    public Certificate readCertificate(String keyStoreFile, String keyStorePass, String alias) {
+    public X509Certificate readCertificate(String keyStoreFile, String keyStorePass, String alias) {
         try {
             //ucitavamo podatke
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
             keyStore.load(in, keyStorePass.toCharArray());
 
             if(keyStore.isKeyEntry(alias)) {
-                Certificate cert = keyStore.getCertificate(alias);
+                X509Certificate cert = (X509Certificate) keyStore.getCertificate(alias);
                 return cert;
             }
         } catch (KeyStoreException e) {
