@@ -8,7 +8,6 @@ function Login(props) {
 
     function submitHandler(event) {
         event.preventDefault();
-        console.log('Submited');
         navigate('/home');
     }
 
