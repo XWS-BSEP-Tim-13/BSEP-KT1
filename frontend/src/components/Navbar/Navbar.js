@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import classes from './Navbar.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 
 function Navbar() {
@@ -18,6 +19,9 @@ function Navbar() {
                 <div>
                     <Link to="/allCertificates" className={classes.link} >All Certificates</Link>
                     <Link to="/newCertificate" className={classes.link} >New Certificate</Link>
+                    <Link to="/" className={classes.link}>
+                        LogOut <FontAwesomeIcon icon={faRightFromBracket} />
+                    </Link>
                     <FontAwesomeIcon icon={faBars} className={classes.menuIcon} onClick={() => setMobileNavClicked(true)} />
                 </div>
             </nav>

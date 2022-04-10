@@ -35,6 +35,11 @@ h1 {
     padding-left: 0.5rem;
 }
 
+.select {
+    outline: none;
+    width: 22.6rem;
+}
+
 .checkbox {
     border-bottom: 2px solid #ebebeb;
     display: flex;
@@ -86,9 +91,12 @@ h1 {
     }
 
     .formItem input,
-    .checkbox,
-    .select {
+    .checkbox {
         width: 19rem;
+    }
+
+    .select {
+        width: 19.6rem;
     }
 
     .checkbox > input {

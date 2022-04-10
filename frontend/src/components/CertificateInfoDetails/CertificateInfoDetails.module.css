@@ -1,0 +1,53 @@
+.page {
+    padding: 6%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 0.9rem;
+}
+
+.labelBold {
+    font-size: inherit;
+    margin: 0;
+    padding: 1rem 0;
+    font-weight: bold;
+    text-align: left;
+}
+
+.fields {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.fieldsColumn {
+    width: 100%;
+}
+
+.field {
+    background-color: #e9f5ff;
+    color: #244861;
+    width: 90%;
+    height: 2rem;
+    border: none;
+    cursor: pointer;
+    margin: 0.2rem 0;
+}
+
+.fieldSelected {
+    background-color: #356c91;
+    color: white;
+    width: 90%;
+    height: 2rem;
+    border: none;
+    cursor: pointer;
+    margin: 0.2rem 0;
+}
+
+.value {
+    border: 1px solid #356c91;
+    width: 95%;
+    height: 20vh;
+    text-align: left;
+    padding: 0.5rem;
+}
