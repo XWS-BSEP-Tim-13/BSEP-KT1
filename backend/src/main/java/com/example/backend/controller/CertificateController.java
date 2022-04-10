@@ -1,11 +1,12 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.CreationCertificateDto;
 import com.example.backend.service.interfaces.CertificateService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/certificate")
@@ -19,6 +20,12 @@ public class CertificateController {
     public String Test(){
         certificateService.test();
         return "123";
+    }
+
+    @PostMapping()
+    public ResponseEntity<Void> saveCertificate(@RequestBody CreationCertificateDto dto){
+        if(!certificateService.saveCertificate(dto)) return new ResponseEntity("Something went wrong", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 

@@ -73,15 +73,6 @@ public class KeystoreHandler {
             e.printStackTrace();
         }
     }
-
-    public void writePrivateKey(String alias, PrivateKey privateKey, char[] password) {
-        try {
-            keyStore.setKeyEntry(alias, privateKey, password, new Certificate[] {});
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        }
-    }
-
     public IssuerDataDTO readIssuerFromStore(String keyStoreFile, String alias, char[] password, char[] keyPass) {
         try {
             //Datoteka se ucitava

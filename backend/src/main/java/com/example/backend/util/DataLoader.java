@@ -66,7 +66,7 @@ public class DataLoader implements ApplicationRunner {
                 .publicKey(issuerKeyPair.getPublic())
                 .issuingDate(new Date())
                 .subject(admin)
-                .alias(UUID.randomUUID().toString())
+                .alias("alias")
                 .build();
         X509Certificate cert =certificateGenerator.generateCertificate(admin,admin,creationCertificateDto);
         certificate.setSerialNumber(cert.getSerialNumber().intValue());

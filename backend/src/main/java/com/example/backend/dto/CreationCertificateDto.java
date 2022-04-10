@@ -17,4 +17,6 @@ public class CreationCertificateDto {
     private Date expiringDate;
     private CertificateType certificateType;
     private String purpose;
+    private Long issuerId;
+    private Long subjectId;
 }

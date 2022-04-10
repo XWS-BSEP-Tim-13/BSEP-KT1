@@ -9,18 +9,19 @@ import java.security.PublicKey;
 import java.util.Date;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Certificate extends BaseEntity{
     @ManyToOne
     @JoinColumn(name="subject")
+    @JsonIgnoreProperties("certificates")
     private CertificationEntity subject;
 
     @ManyToOne
     @JoinColumn(name="parent_certificate")
-    @JsonIgnoreProperties("certificates")
     private Certificate parentCertificate;
 
     @Column(name="issuing_date")
