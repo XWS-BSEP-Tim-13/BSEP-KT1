@@ -2,10 +2,8 @@ package com.example.backend.model;
 
 import com.example.backend.enums.EntityRole;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
 import java.security.PrivateKey;
@@ -14,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,7 +28,7 @@ public class CertificationEntity extends BaseEntity{
     @Column(name="password", nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "subject",cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "subject", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("subject")
     private List<Certificate> certificates = new ArrayList<>();
 
@@ -44,6 +43,6 @@ public class CertificationEntity extends BaseEntity{
     @Transient
     private PrivateKey privateKey;
 
-    @Column(nullable = false)
+    @Column()
     private PublicKey publicKey;
 }
