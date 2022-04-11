@@ -19,4 +19,5 @@ public class RegistrationEntityDTO {
     private String countryCode;
     private String password;
     private EntityRole entityRole;
+    private String role;
 }

@@ -1,35 +1,46 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-import classes from './Login.module.css';
-
+import classes from "./Login.module.css";
+import AuthentificationService from "../../services/authentification_service";
 
 function Login(props) {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    function submitHandler(event) {
-        event.preventDefault();
-        navigate('/home');
+  function submitHandler(event) {
+    event.preventDefault();
+    navigate("/home");
+    const loginDto = {
+        email : event.target[0].value,
+        password : event.target[1].value
     }
+    console.log(loginDto)
+    AuthentificationService.login(loginDto).then(resp =>{
+        console.log(resp);
+    })
+  }
 
-    return (
-        <div className={classes.login}>
-            <h1>Log in</h1>
-            <form onSubmit={submitHandler} className={classes.form}>
-
-                <div className={classes.formItem}>
-                    <input type='text' required placeholder='Username' />
-                </div>
-                <div className={classes.formItem}>
-                    <input type='password' required placeholder='Password' />
-                </div>
-
-                <button className={classes.buttonLogIn}>Log in</button>
-                <a href='/#' className={classes.registerLink} onClick={() => props.changePage(false)}>
-                    Don't have an account? Register here.
-                </a>
-            </form>
+  return (
+    <div className={classes.login}>
+      <h1>Log in</h1>
+      <form onSubmit={submitHandler} className={classes.form}>
+        <div className={classes.formItem}>
+          <input type="text" required placeholder="Username" />
         </div>
-    );
+        <div className={classes.formItem}>
+          <input type="password" required placeholder="Password" />
+        </div>
+
+        <button className={classes.buttonLogIn}>Log in</button>
+        <a
+          href="/#"
+          className={classes.registerLink}
+          onClick={() => props.changePage(false)}
+        >
+          Don't have an account? Register here.
+        </a>
+      </form>
+    </div>
+  );
 }
 
 export default Login;
