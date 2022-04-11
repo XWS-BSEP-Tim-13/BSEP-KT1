@@ -53,6 +53,11 @@
         margin: 0.5rem 0;
     }
 
+    .optionSelected {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+
     .certificates {
         flex-direction: column;
     }

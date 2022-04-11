@@ -32,7 +32,7 @@ function CertificatesList(props) {
                 })
             }
             { showCertificateInfo ? <Backdrop click={closeCertificateInfoHandler}/> : null }
-            { showCertificateInfo ? <CertificateInfo certificateId={certificateId}/> : null }
+            { showCertificateInfo ? <CertificateInfo certificateId={certificateId} click={closeCertificateInfoHandler}/> : null }
         </div>
     );
 }

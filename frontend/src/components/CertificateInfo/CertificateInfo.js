@@ -3,7 +3,9 @@ import { useState, useEffect } from 'react';
 import CertificateInfoGeneral from '../CertificateInfoGeneral/CertificateInfoGeneral';
 import CertificateInfoDetails from '../CertificateInfoDetails/CertificateInfoDetails';
 import CertificateInfoPath from '../CertificateInfoPath/CertificateInfoPath';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import classes from './CertificateInfo.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function CertificateInfo(props) {
     const [selectedTab, setSelectedTab] = useState('general');
@@ -41,23 +43,26 @@ function CertificateInfo(props) {
     return (
         <div className={classes.modal}>
             <nav className={classes.nav}>
-                <button className={selectedTab === 'general' ? classes.navButtonSelected : classes.navButton}
-                    onClick={() => setSelectedTab('general')} >
-                    General
-                </button>
-                <button className={selectedTab === 'details' ? classes.navButtonSelected : classes.navButton}
-                    onClick={() => setSelectedTab('details')} >
-                    Details
-                </button>
-                <button className={selectedTab === 'path' ? classes.navButtonSelected : classes.navButton}
-                    onClick={() => setSelectedTab('path')} >
-                    Certification Path
-                </button>
+                <div className={classes.navItems}>
+                    <button className={selectedTab === 'general' ? classes.navButtonSelected : classes.navButton}
+                        onClick={() => setSelectedTab('general')} >
+                        General
+                    </button>
+                    <button className={selectedTab === 'details' ? classes.navButtonSelected : classes.navButton}
+                        onClick={() => setSelectedTab('details')} >
+                        Details
+                    </button>
+                    <button className={selectedTab === 'path' ? classes.navButtonSelected : classes.navButton}
+                        onClick={() => setSelectedTab('path')} >
+                        Certification Path
+                    </button>
+                </div>
+                <FontAwesomeIcon icon={faXmark} className={classes.xIcon} onClick={props.click}/>
             </nav>
 
-            { selectedTab === 'general' ? <CertificateInfoGeneral certificate={certificate}/> : null }
-            { selectedTab === 'details' ? <CertificateInfoDetails certificate={certificate}/> : null }
-            { selectedTab === 'path' ? <CertificateInfoPath certificate={certificate}/> : null }
+            {selectedTab === 'general' ? <CertificateInfoGeneral certificate={certificate} /> : null}
+            {selectedTab === 'details' ? <CertificateInfoDetails certificate={certificate} /> : null}
+            {selectedTab === 'path' ? <CertificateInfoPath certificate={certificate} /> : null}
         </div>
     );
 }
