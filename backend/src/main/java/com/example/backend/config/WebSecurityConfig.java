@@ -64,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests().antMatchers("/auth/**").permitAll()		// /auth/**
                 .antMatchers("/h2-console/**").permitAll()	// /h2-console/** ako se koristi H2 baza)
-                .antMatchers("/cottage/").permitAll()
+                .antMatchers("/certificate/**").permitAll()
                 .anyRequest().authenticated().and()
 
                 .cors().and()

@@ -88,8 +88,6 @@ public class DataLoader implements ApplicationRunner {
         roleRepository.save(subsystemRole);
         entityRepository.save(admin);
         keystoreHandler.loadKeyStore(null, "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray());
-        //keystoreHandler.saveKeyStore("keystore/test.jks", "123".toCharArray());
-
         keystoreHandler.write("alias", adminKeyPair.getPrivate(), "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray(), cert);
         keystoreHandler.saveKeyStore("keystore/ADMIN.jks", "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray());
 
