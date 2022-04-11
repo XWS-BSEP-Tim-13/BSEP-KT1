@@ -57,7 +57,7 @@ function CertificateInfo(props) {
                         Certification Path
                     </button>
                 </div>
-                <FontAwesomeIcon icon={faXmark} className={classes.xIcon} onClick={props.click}/>
+                <FontAwesomeIcon icon={faXmark} className={classes.xIcon} onClick={props.click} />
             </nav>
 
             {selectedTab === 'general' ? <CertificateInfoGeneral certificate={certificate} /> : null}
