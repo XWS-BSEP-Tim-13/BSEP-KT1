@@ -18,7 +18,6 @@ public class CertificateController {
 
     @GetMapping("/")
     public String Test(){
-        certificateService.test();
         return "123";
     }
 

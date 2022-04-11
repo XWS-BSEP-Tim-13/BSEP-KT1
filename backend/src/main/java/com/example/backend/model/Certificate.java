@@ -1,10 +1,12 @@
 package com.example.backend.model;
 
 import com.example.backend.enums.CertificateType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,6 +24,7 @@ public class Certificate extends BaseEntity{
     @JsonIgnoreProperties("certificates")
     private CertificationEntity subject;
 
+    @JsonIgnoreProperties("parent_certificate")
     @ManyToOne
     @JoinColumn(name="parent_certificate")
     private Certificate parentCertificate;
@@ -35,12 +38,9 @@ public class Certificate extends BaseEntity{
     @Column(name = "cerfilename")
     private String cerFileName;
 
-    @Column(nullable = false)
-    private PublicKey publicKey;
-
-    @Column(name="serial_number",nullable = false,unique = true)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer serialNumber;
+//    @Column(name="serial_number",nullable = false,unique = true)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Integer serialNumber;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "certificate_purposes", joinColumns = @JoinColumn(name = "id"))
@@ -53,4 +53,10 @@ public class Certificate extends BaseEntity{
     private boolean isCA;
 
     private String alias;
+
+    @Transient
+    private PrivateKey privateKey;
+
+    @Column()
+    private PublicKey publicKey;
 }

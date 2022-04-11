@@ -16,7 +16,7 @@ public class ParseCertificate {
             String firstToken = pair[0].strip();
             switch (firstToken){
                 case "UID":
-                    entity.setId(Long.parseLong(pair[1]));
+                    entity.setId(Integer.parseInt(pair[1]));
                     break;
                 case "EMAILADDRESS":
                     entity.setEmail(pair[1]);

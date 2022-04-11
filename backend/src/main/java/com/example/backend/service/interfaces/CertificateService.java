@@ -5,6 +5,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface CertificateService {
-    void test();
-    public boolean saveCertificate(CreationCertificateDto dto);
+    boolean saveCertificate(CreationCertificateDto dto);
 }
