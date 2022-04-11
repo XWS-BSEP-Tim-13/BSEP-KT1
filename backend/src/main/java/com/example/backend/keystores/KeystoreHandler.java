@@ -73,6 +73,7 @@ public class KeystoreHandler {
             e.printStackTrace();
         }
     }
+
     public IssuerDataDTO readIssuerFromStore(String keyStoreFile, String alias, char[] password, char[] keyPass) {
         try {
             //Datoteka se ucitava

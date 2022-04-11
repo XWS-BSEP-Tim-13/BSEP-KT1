@@ -1,12 +1,14 @@
 package com.example.backend.dto;
 
 import com.example.backend.enums.CertificateType;
+import com.example.backend.model.Certificate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -14,9 +16,11 @@ import java.util.Date;
 @Builder
 public class CreationCertificateDto {
 
+    private Date validFrom;
     private Date expiringDate;
     private CertificateType certificateType;
-    private String purpose;
+    private List<String> purposes;
     private Long issuerId;
     private Long subjectId;
+    private Long signerCertificateId;
 }

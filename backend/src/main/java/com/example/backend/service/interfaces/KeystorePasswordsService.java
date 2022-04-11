@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface KeystorePasswordsService {
 
-    List<OrganizationKeystoreAccess> getAll();
-    boolean save(OrganizationKeystoreAccess oksa);
+    List<OrganizationKeystoreAccess> getAllKeystorePasswords();
+    boolean saveOrganizationPassword(OrganizationKeystoreAccess oksa);
     String findPasswordByOrganization(String organization);
 }

@@ -17,10 +17,7 @@ import org.springframework.stereotype.Component;
 import java.security.KeyPair;
 import java.security.Security;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 @AllArgsConstructor
@@ -54,21 +51,23 @@ public class DataLoader implements ApplicationRunner {
         CreationCertificateDto creationCertificateDto = CreationCertificateDto.builder()
                 .certificateType(CertificateType.SELF_SIGNED)
                 .expiringDate(endDate)
-                .purpose("Proves your identity to a remote computer")
+                .purposes(new ArrayList<String>(Arrays.asList("Proves your identity to a remote computer")))
+                .validFrom(new Date())
+                .signerCertificateId(1L)
                 .build();
 
         Certificate certificate = Certificate.builder()
                 .expiringDate(endDate)
                 .cerFileName("keystore/admin.jks")
-                .purpose("Proves your identity to a remote computer")
+                .purposes(new ArrayList<String>(Arrays.asList("Proves your identity to a remote computer")))
                 .type(CertificateType.SELF_SIGNED)
                 .isCA(true)
                 .publicKey(issuerKeyPair.getPublic())
-                .issuingDate(new Date())
+                .validFrom(new Date())
                 .subject(admin)
                 .alias("alias")
                 .build();
-        X509Certificate cert =certificateGenerator.generateCertificate(admin,admin,creationCertificateDto);
+        X509Certificate cert =certificateGenerator.generateCertificate(admin, admin, creationCertificateDto);
         certificate.setSerialNumber(cert.getSerialNumber().intValue());
         admin.getCertificates().add(certificate);
         entityRepository.save(admin);

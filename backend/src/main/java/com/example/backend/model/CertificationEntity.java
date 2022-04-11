@@ -28,7 +28,7 @@ public class CertificationEntity extends BaseEntity{
     @Column(name="password", nullable = false)
     private String password;
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "subject",cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "subject", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("subject")
     private List<Certificate> certificates = new ArrayList<>();
 

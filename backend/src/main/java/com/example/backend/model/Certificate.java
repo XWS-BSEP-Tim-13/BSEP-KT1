@@ -6,7 +6,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -24,8 +26,8 @@ public class Certificate extends BaseEntity{
     @JoinColumn(name="parent_certificate")
     private Certificate parentCertificate;
 
-    @Column(name="issuing_date")
-    private Date issuingDate;
+    @Column(name="valid_from")
+    private Date validFrom;
 
     @Column(name="expiring_date")
     private Date expiringDate;
@@ -40,7 +42,10 @@ public class Certificate extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer serialNumber;
 
-    private String purpose;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "certificate_purposes", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "purposes")
+    private List<String> purposes = new ArrayList<>();
 
     private CertificateType type;
 

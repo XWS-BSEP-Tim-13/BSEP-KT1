@@ -31,7 +31,7 @@ public class KeystorePasswordsServiceImpl implements KeystorePasswordsService {
     }
 
     @Override
-    public List<OrganizationKeystoreAccess> getAll() {
+    public List<OrganizationKeystoreAccess> getAllKeystorePasswords() {
         Reader reader = null;
         try {
             reader = Files.newBufferedReader(Paths.get(path));
@@ -44,9 +44,10 @@ public class KeystorePasswordsServiceImpl implements KeystorePasswordsService {
         }
         return null;
     }
+
     public String findPasswordByOrganization(String organization){
-        List<OrganizationKeystoreAccess> list = getAll();
-        for(OrganizationKeystoreAccess item : list){
+        List<OrganizationKeystoreAccess> allKeystorePasswords = getAllKeystorePasswords();
+        for(OrganizationKeystoreAccess item : allKeystorePasswords){
             if(item.getOrganiation().equals(organization))
                 return item.getPassword();
         }
@@ -55,12 +56,12 @@ public class KeystorePasswordsServiceImpl implements KeystorePasswordsService {
 
 
     @Override
-    public boolean save(OrganizationKeystoreAccess oksa) {
+    public boolean saveOrganizationPassword(OrganizationKeystoreAccess oksa) {
         try {
-            List<OrganizationKeystoreAccess> list = getAll();
-            list.add(oksa);
-            FileWriter fileWriter=new FileWriter(path);
-            String json=gson.toJson(list);
+            List<OrganizationKeystoreAccess> allKeystorePasswords = getAllKeystorePasswords();
+            allKeystorePasswords.add(oksa);
+            FileWriter fileWriter = new FileWriter(path);
+            String json = gson.toJson(allKeystorePasswords);
             fileWriter.write(json);
             fileWriter.flush();
             fileWriter.close();
