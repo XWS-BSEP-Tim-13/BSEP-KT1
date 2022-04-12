@@ -23,6 +23,23 @@ function CertificateInfo(props) {
         certificateStatus: true
     });
 
+    function revokeCertificateHandler() {
+        //ajax za povlacenje sertifikata
+        setCertificate({
+            id: certificate.id,
+            serialNumber: certificate.serialNumber,
+            purposes: certificate.purposes,
+            subject: certificate.subject,
+            issuer: certificate.issuer,
+            validFrom: certificate.validFrom,
+            validTo: certificate.validTo,
+            signatureAlgorithm: certificate.signatureAlgorithm,
+            signatureHashAlgorithm: certificate.signatureHashAlgorithm,
+            publicKey: certificate.publicKey,
+            certificateStatus: 'REVOKED'
+        })
+    }
+
     useEffect(() => {
         // ajax poziv za dobavljanje sertifikata po id-ju
         setCertificate({
@@ -36,7 +53,7 @@ function CertificateInfo(props) {
             signatureAlgorithm: 'sha256RSA',
             signatureHashAlgorithm: 'sha2560',
             publicKey: 'jhhzfbkzdhskjvjv',
-            certificateStatus: true
+            certificateStatus: 'INVALID'
         })
     }, []);
 
@@ -62,7 +79,7 @@ function CertificateInfo(props) {
 
             {selectedTab === 'general' ? <CertificateInfoGeneral certificate={certificate} /> : null}
             {selectedTab === 'details' ? <CertificateInfoDetails certificate={certificate} /> : null}
-            {selectedTab === 'path' ? <CertificateInfoPath certificate={certificate} /> : null}
+            {selectedTab === 'path' ? <CertificateInfoPath certificate={certificate} onRevoke={revokeCertificateHandler}/> : null}
         </div>
     );
 }

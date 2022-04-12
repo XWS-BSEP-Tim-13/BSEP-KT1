@@ -11,7 +11,7 @@ function CertificateInfoGeneral(props) {
                 <p className={classes.labelBold}>This certificate is intended for the following purpose(s):</p>
                 <ul>
                     {props.certificate.purposes.map((purpose) => {
-                        return <li>{purpose}</li>
+                        return <li key={purpose}>{purpose}</li>
                     })}
                 </ul>
                 <p className={classes.label}>* Refer to the certification authority's statement for details.</p>
