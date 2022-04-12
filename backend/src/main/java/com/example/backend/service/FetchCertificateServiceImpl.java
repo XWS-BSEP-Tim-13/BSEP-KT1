@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Predicate;
@@ -66,6 +67,19 @@ public class FetchCertificateServiceImpl implements FetchCertificateService {
         for(Certificate cert : subjectCertificates){
             certificateDTOS.add(createFetchCertificateDTO(cert));
         }
+        return certificateDTOS;
+    }
+
+    @Override
+    public List<FetchCertificateDTO> getHierarchyAbove(Integer certificateId) {
+        ArrayList<FetchCertificateDTO> certificateDTOS = new ArrayList<>();
+        Certificate tempCertificate = certificationRepostory.findById(certificateId).get();
+        certificateDTOS.add(createFetchCertificateDTO(tempCertificate));
+        while(tempCertificate.getParentCertificate().getId() != tempCertificate.getId()){
+            tempCertificate = tempCertificate.getParentCertificate();
+            certificateDTOS.add(createFetchCertificateDTO(tempCertificate));
+        }
+        Collections.reverse(certificateDTOS);
         return certificateDTOS;
     }
 

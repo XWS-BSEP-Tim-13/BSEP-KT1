@@ -93,9 +93,9 @@ public class CertificateController {
         return new ResponseEntity<>(fetchCertificateService.getAllCertificatesByOrganization(organization), HttpStatus.OK);
     }
 
-    @GetMapping("/subject")
-    public ResponseEntity<List<FetchCertificateDTO>> getBySubject(@RequestParam("id") Integer subjectId){
-        return new ResponseEntity<>(fetchCertificateService.getAllCertificatesBySubject(subjectId), HttpStatus.OK);
+    @GetMapping("/subject/{id}")
+    public ResponseEntity<List<FetchCertificateDTO>> getBySubject(@PathVariable Integer id){
+        return new ResponseEntity<>(fetchCertificateService.getAllCertificatesBySubject(id), HttpStatus.OK);
     }
 
     @GetMapping("/subjects")
@@ -103,4 +103,10 @@ public class CertificateController {
         Set<NewCertificateSubjectDTO> subjects = certificateService.getPossibleSubjectsForNewCertificate();
         return new ResponseEntity<>(subjects, HttpStatus.OK);
     }
+    @GetMapping("/hierarchy-above/{id}")
+    public ResponseEntity<List<FetchCertificateDTO>> getHierarchyAbove(@PathVariable Integer id){
+        return new ResponseEntity<>(fetchCertificateService.getHierarchyAbove(id), HttpStatus.OK);
+    }
+
+
 }
