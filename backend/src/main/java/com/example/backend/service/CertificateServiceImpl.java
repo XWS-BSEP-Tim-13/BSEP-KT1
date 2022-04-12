@@ -116,6 +116,11 @@ public class CertificateServiceImpl implements CertificateService {
         return true;
     }
 
+    @Override
+    public Certificate findCertificate(Integer certificateId) {
+        CertificationEntity dbCert=certificationRepostory.findById(certificateId);
+    }
+
     private PrivateKey findIssuerPrivateKey(CertificationEntity issuer){
         String keystorePassword = passwordsService.findPasswordByOrganization(issuer.getOrganization());
 
