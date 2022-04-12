@@ -33,7 +33,6 @@ public class CertificateController {
     }
 
     @GetMapping("/subjects")
-    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Set<NewCertificateSubjectDTO>> getPossibleSubjectsForNewCertificate() {
         Set<NewCertificateSubjectDTO> subjects = certificateService.getPossibleSubjectsForNewCertificate();
         return new ResponseEntity<>(subjects, HttpStatus.OK);

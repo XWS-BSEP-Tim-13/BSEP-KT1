@@ -54,7 +54,7 @@ function Navbar() {
                         <Link to="/newCertificate" className={classes.mobileLink} onClick={() => setMobileNavClicked(false)}  >
                             New Certificate
                         </Link>
-                        <Link to="/" className={classes.link}>
+                        <Link to="/" className={classes.mobileLink}>
                             LogOut <FontAwesomeIcon icon={faRightFromBracket} />
                         </Link>
                     </div>

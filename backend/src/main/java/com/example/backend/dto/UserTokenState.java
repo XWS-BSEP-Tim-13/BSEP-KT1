@@ -13,4 +13,5 @@ public class UserTokenState {
     private String email;
     private String commonName;
     private String role;
+    private String organization;
 }

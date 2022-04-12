@@ -6,19 +6,22 @@ const initialStateValue = {
     email: "",
     commonName: "",
     role: "",
+    organization: ""
 };
 
 export const userSlice = createSlice({
     name: "user",
-    initialState: { value: initialStateValue },
+    initialState: { value: localStorage.getItem("user") == null ? initialStateValue : JSON.parse(localStorage.getItem("user")) },
 
     reducers: {
         login: (state, action) => {
             state.value = action.payload;
+            localStorage.setItem("user", JSON.stringify(action.payload));
         },
 
         logout: (state) => {
             state.value = initialStateValue;
+            localStorage.setItem("user", JSON.stringify(initialStateValue));
         },
     },
 });

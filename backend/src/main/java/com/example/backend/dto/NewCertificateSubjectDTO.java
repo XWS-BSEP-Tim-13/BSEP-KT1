@@ -12,4 +12,7 @@ import lombok.NoArgsConstructor;
 public class NewCertificateSubjectDTO {
     private String email;
     private String commonName;
+    private Integer id;
+    private String organization;
+    private boolean rootForOrganizationExists;
 }

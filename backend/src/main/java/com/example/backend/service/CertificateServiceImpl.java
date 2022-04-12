@@ -6,6 +6,7 @@ import com.example.backend.enums.CertificateStatus;
 import com.example.backend.enums.CertificateType;
 import com.example.backend.enums.EntityRole;
 import com.example.backend.keystores.KeystoreHandler;
+import com.example.backend.model.Certificate;
 import com.example.backend.model.CertificationEntity;
 import com.example.backend.model.OrganizationKeystoreAccess;
 import com.example.backend.repository.CertificationEntityRepository;
@@ -81,10 +82,20 @@ public class CertificateServiceImpl implements CertificateService {
         List<CertificationEntity> allEntities = certificationEntityRepository.findAll();
         Set<NewCertificateSubjectDTO> possibleSubjects = new HashSet<>();
         for (CertificationEntity entity : allEntities) {
-            if(!entity.getRole().getName().equals("ADMIN"))
-                possibleSubjects.add(new NewCertificateSubjectDTO(entity.getEmail(), entity.getCommonName()));
+            if(!entity.getRole().getName().equals("ROLE_ADMIN")) {
+                boolean rootForOrganizationExists = checkIfRootForOrganizationExists(entity.getOrganization());
+                possibleSubjects.add(new NewCertificateSubjectDTO(entity.getEmail(), entity.getCommonName(), entity.getId(), entity.getOrganization(), rootForOrganizationExists));
+            }
         }
         return possibleSubjects;
+    }
+
+    private boolean checkIfRootForOrganizationExists(String organization) {
+        List<Certificate> certificates = certificationRepostory.findAll();
+        for (Certificate certificate : certificates) {
+            if (organization.equals(certificate.getSubject().getOrganization())) return true;
+        }
+        return false;
     }
 
     private PrivateKey findIssuerPrivateKey(CertificationEntity issuer){
