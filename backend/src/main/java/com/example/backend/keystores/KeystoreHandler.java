@@ -163,8 +163,9 @@ public class KeystoreHandler {
         return null;
     }
 
-    public Enumeration<String> getAliases(){
+    public Enumeration<String> getAliases(String keyStoreFile, String keyStorePass){
         try {
+            loadKeyStore(keyStoreFile, keyStorePass.toCharArray());
             return keyStore.aliases();
         } catch (KeyStoreException e) {
             e.printStackTrace();
@@ -173,7 +174,7 @@ public class KeystoreHandler {
     }
 
     public List<X509Certificate> readAllCertificates(String keyStoreFile, String keyStorePass){
-        Enumeration<String> aliases = getAliases();
+        Enumeration<String> aliases = getAliases(keyStoreFile, keyStorePass);
         List<X509Certificate> allCertificates = new ArrayList<>();
         while(aliases.hasMoreElements()) {
             String alias = aliases.nextElement();
