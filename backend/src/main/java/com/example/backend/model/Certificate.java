@@ -1,5 +1,6 @@
 package com.example.backend.model;
 
+import com.example.backend.enums.CertificateStatus;
 import com.example.backend.enums.CertificateType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -38,10 +39,6 @@ public class Certificate extends BaseEntity{
     @Column(name = "cerfilename")
     private String cerFileName;
 
-//    @Column(name="serial_number",nullable = false,unique = true)
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Integer serialNumber;
-
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "certificate_purposes", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "purposes")
@@ -57,6 +54,9 @@ public class Certificate extends BaseEntity{
     @Transient
     private PrivateKey privateKey;
 
-    @Column()
+    @Column(name = "public_key")
     private PublicKey publicKey;
+
+    @Column(name = "is_valid")
+    private CertificateStatus certificateStatus = CertificateStatus.GOOD;
 }

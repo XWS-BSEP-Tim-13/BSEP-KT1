@@ -3,7 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialStateValue = {
     accessToken: "",
     expiresIn: 0,
-    role: ""
+    email: "",
+    commonName: "",
+    role: "",
 };
 
 export const userSlice = createSlice({

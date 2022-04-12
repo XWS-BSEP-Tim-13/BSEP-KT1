@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import CertificatesList from '../../components/CertificatesList/CertificatesList';
 import classes from './AllCertificates.module.css';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 var certificates = [
     {
@@ -63,6 +66,8 @@ var certificates = [
 function AllCertificates() {
     const [selectedType, setSelectedType] = useState('ee');
 
+    const user = useSelector((state) => state.user.value);
+
     return (
         <div className={classes.page}>
             <div className={classes.options}>
@@ -79,8 +84,25 @@ function AllCertificates() {
                     Root
                 </button>
             </div>
+            <div className={classes.searchOptions}>
+                <div className={classes.search}>
+                    { user.role === 'ROLE_ADMIN' ? 
+                        <input type="text" placeholder="Search Subject..." className={classes.searchInput}></input> :
+                        <input type="text" placeholder="Search Serial Number..." className={classes.searchInput}></input>
+                    }
+                    <FontAwesomeIcon icon={faMagnifyingGlass} className={classes.searchIcon} />
+                </div> 
+                <div className={classes.search}>
+                    <input type="text" placeholder="Search Issuer..." className={classes.searchInput}></input>
+                    <FontAwesomeIcon icon={faMagnifyingGlass} className={classes.searchIcon} />
+                </div>
+                <div className={classes.search}>
+                    <input type="text" placeholder="Search Organization..." className={classes.searchInput}></input>
+                    <FontAwesomeIcon icon={faMagnifyingGlass} className={classes.searchIcon} />
+                </div>
+            </div>
             <div>
-                <CertificatesList certificates={certificates} selectedType={selectedType}/>
+                <CertificatesList certificates={certificates} selectedType={selectedType} />
             </div>
         </div>
     );

@@ -25,9 +25,9 @@ h1 {
 .formItem input,
 .checkbox,
 .select {
-    background-color: #ebebeb;
+    background-color: #ededed;
     border: none;
-    border-bottom: 2px solid #ccc;
+    border-bottom: 2px solid #ddd;
     height: 2rem;
     width: 22rem;
     font-size: 1rem;

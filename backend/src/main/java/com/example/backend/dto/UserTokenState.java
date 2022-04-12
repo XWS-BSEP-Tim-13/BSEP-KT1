@@ -10,5 +10,7 @@ import lombok.NoArgsConstructor;
 public class UserTokenState {
     private String accessToken;
     private Integer expiresIn;
+    private String email;
+    private String commonName;
     private String role;
 }

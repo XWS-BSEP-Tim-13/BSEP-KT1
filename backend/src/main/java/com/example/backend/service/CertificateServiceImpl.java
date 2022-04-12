@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.CreationCertificateDto;
+import com.example.backend.enums.CertificateStatus;
 import com.example.backend.enums.CertificateType;
 import com.example.backend.enums.EntityRole;
 import com.example.backend.keystores.KeystoreHandler;
@@ -131,8 +132,9 @@ public class CertificateServiceImpl implements CertificateService {
                 .validFrom(creationCertificateDto.getValidFrom())
                 .build();
 
-
-
+        if(certificate.getValidFrom().after(new Date())) certificate.setCertificateStatus(CertificateStatus.INVALID);
+        else certificate.setCertificateStatus(CertificateStatus.GOOD);
+        
         return certificate;
     }
 }

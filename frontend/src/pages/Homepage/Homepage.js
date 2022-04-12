@@ -6,7 +6,8 @@ function Homepage(props) {
 
     useEffect(() => {
         console.log(user)
-    }, []);
+        console.log(`${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDay()}`);
+    }, [user]);
 
     return (
         <div>
