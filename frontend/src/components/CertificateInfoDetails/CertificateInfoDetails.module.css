@@ -47,7 +47,9 @@
 .value {
     border: 1px solid #356c91;
     width: 95%;
-    height: 20vh;
+    min-height: 20vh;
     text-align: left;
+    overflow-wrap: break-word;
     padding: 0.5rem;
+
 }

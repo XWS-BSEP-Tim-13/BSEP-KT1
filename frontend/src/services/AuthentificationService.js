@@ -14,4 +14,4 @@ const AuthentificationService = {
 
 
 }
-export default AuthentificationService
+export default AuthentificationService;

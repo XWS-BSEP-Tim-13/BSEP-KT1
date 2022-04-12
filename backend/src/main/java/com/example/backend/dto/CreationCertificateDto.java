@@ -20,7 +20,6 @@ public class CreationCertificateDto {
     private Date expiringDate;
     private CertificateType certificateType;
     private List<String> purposes;
-    private Long issuerId;
-    private Long subjectId;
-    private Long signerCertificateId;
+    private Integer subjectEntityId;
+    private Integer signerCertificateId;
 }

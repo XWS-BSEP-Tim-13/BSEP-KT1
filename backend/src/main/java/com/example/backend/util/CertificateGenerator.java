@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.example.backend.dto.CreationCertificateDto;
+import com.example.backend.model.Certificate;
 import com.example.backend.model.CertificationEntity;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
@@ -25,7 +26,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CertificateGenerator {
 
-    public X509Certificate generateCertificate(CertificationEntity subjectData, CertificationEntity issuerData, CreationCertificateDto certificateDto) {
+    public X509Certificate generateCertificate(Certificate subject, Certificate issuer) {
         try {
             //Posto klasa za generisanje sertifiakta ne moze da primi direktno privatni kljuc pravi se builder za objekat
             //Ovaj objekat sadrzi privatni kljuc izdavaoca sertifikata i koristiti se za potpisivanje sertifikata
@@ -35,15 +36,15 @@ public class CertificateGenerator {
             builder = builder.setProvider("BC");
 
             //Formira se objekat koji ce sadrzati privatni kljuc i koji ce se koristiti za potpisivanje sertifikata
-            ContentSigner contentSigner = builder.build(issuerData.getPrivateKey());
+            ContentSigner contentSigner = builder.build(issuer.getPrivateKey());
 
             //Postavljaju se podaci za generisanje sertifiakta
-            X509v3CertificateBuilder certGen = new JcaX509v3CertificateBuilder(generateX500Name(issuerData),
+            X509v3CertificateBuilder certGen = new JcaX509v3CertificateBuilder(generateX500Name(issuer),
                     new BigInteger(String.valueOf(System.currentTimeMillis())),
-                    certificateDto.getValidFrom(),
-                    certificateDto.getExpiringDate(),
-                    generateX500Name(subjectData),
-                    subjectData.getPublicKey());
+                    subject.getValidFrom(),
+                    subject.getExpiringDate(),
+                    generateX500Name(subject),
+                    subject.getPublicKey());
             //Generise se sertifikat
             X509CertificateHolder certHolder = certGen.build(contentSigner);
 
@@ -68,14 +69,14 @@ public class CertificateGenerator {
         return null;
     }
 
-    private X500Name generateX500Name(CertificationEntity user) {
+    private X500Name generateX500Name(Certificate user) {
         X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
-        builder.addRDN(BCStyle.CN, user.getCommonName());
-        builder.addRDN(BCStyle.O, user.getOrganization());
-        builder.addRDN(BCStyle.C, user.getCountryCode());
-        builder.addRDN(BCStyle.E, user.getEmail());
+        builder.addRDN(BCStyle.CN, user.getSubject().getCommonName());
+        builder.addRDN(BCStyle.O, user.getSubject().getOrganization());
+        builder.addRDN(BCStyle.C, user.getSubject().getCountryCode());
+        builder.addRDN(BCStyle.E, user.getSubject().getEmail());
         //UID (USER ID) je ID korisnika
-        builder.addRDN(BCStyle.UID, user.getId().toString());
+        builder.addRDN(BCStyle.UID, user.getSubject().getId().toString());
 
         //Kreiraju se podaci za issuer-a, sto u ovom slucaju ukljucuje:
         // - privatni kljuc koji ce se koristiti da potpise sertifikat koji se izdaje

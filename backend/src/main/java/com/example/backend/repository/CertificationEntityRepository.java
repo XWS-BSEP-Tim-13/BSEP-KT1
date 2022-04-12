@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CertificationEntityRepository extends JpaRepository<CertificationEntity, Long> {
+public interface CertificationEntityRepository extends JpaRepository<CertificationEntity, Integer> {
 
     @Query("select a from CertificationEntity a where a.entityRole = ?1")
     CertificationEntity findAdmin(EntityRole role);

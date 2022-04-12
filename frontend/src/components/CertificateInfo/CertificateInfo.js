@@ -6,6 +6,7 @@ import CertificateInfoPath from '../CertificateInfoPath/CertificateInfoPath';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import classes from './CertificateInfo.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import CertificationService from '../../services/CertificationService';
 
 function CertificateInfo(props) {
     const [selectedTab, setSelectedTab] = useState('general');
@@ -23,20 +24,19 @@ function CertificateInfo(props) {
         certificateStatus: true
     });
 
+    function revokeCertificateHandler() {
+        //ajax za povlacenje sertifikata
+        CertificationService.findCertificateById(props.certificateId)
+        .then(resp=>{
+            setCertificate(resp.data)
+        })
+    }
+
     useEffect(() => {
         // ajax poziv za dobavljanje sertifikata po id-ju
-        setCertificate({
-            id: '1',
-            serialNumber: '651516551',
-            purposes: ['Proves your identity to a remote computer', 'Ensures the identity of a remote computer'],
-            subject: 'Subject name',
-            issuer: 'Issuer name',
-            validFrom: '2/3/2022',
-            validTo: '2/4/2023',
-            signatureAlgorithm: 'sha256RSA',
-            signatureHashAlgorithm: 'sha2560',
-            publicKey: 'jhhzfbkzdhskjvjv',
-            certificateStatus: true
+        CertificationService.findCertificateById(props.certificateId)
+        .then(resp=>{
+            setCertificate(resp.data)
         })
     }, []);
 
@@ -62,7 +62,7 @@ function CertificateInfo(props) {
 
             {selectedTab === 'general' ? <CertificateInfoGeneral certificate={certificate} /> : null}
             {selectedTab === 'details' ? <CertificateInfoDetails certificate={certificate} /> : null}
-            {selectedTab === 'path' ? <CertificateInfoPath certificate={certificate} /> : null}
+            {selectedTab === 'path' ? <CertificateInfoPath certificate={certificate} onRevoke={revokeCertificateHandler}/> : null}
         </div>
     );
 }

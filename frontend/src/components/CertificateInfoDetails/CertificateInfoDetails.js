@@ -11,6 +11,22 @@ function CertificateInfoDetails(props) {
         setValue(value);
     }
 
+    function getDate(timestamp){
+        let date = new Date(timestamp);
+        if(isNaN(timestamp)) date=new Date() 
+
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    month = (month < 10 ? "0" : "") + month;
+    day = (day < 10 ? "0" : "") + day;
+
+
+    var str = day + "-" + month + "-" + date.getFullYear();
+
+
+    return str;
+    }
+
     return (
         <div className={classes.page}>
             <p className={classes.labelBold}>Fields:</p>
@@ -31,9 +47,9 @@ function CertificateInfoDetails(props) {
                     <button className={selectedField === 'subject' ? classes.fieldSelected : classes.field}
                         onClick={() => selectFieldHandler('subject', props.certificate.subject)} >Subject</button>
                     <button className={selectedField === 'validFrom' ? classes.fieldSelected : classes.field}
-                        onClick={() => selectFieldHandler('validFrom', props.certificate.validFrom)} >Valid From</button>
+                        onClick={() => selectFieldHandler('validFrom',getDate(props.certificate.validFrom))} >Valid From</button>
                     <button className={selectedField === 'validTo' ? classes.fieldSelected : classes.field}
-                        onClick={() => selectFieldHandler('validTo', props.certificate.validTo)} >Valid To</button>
+                        onClick={() => selectFieldHandler('validTo', getDate(props.certificate.validTo))} >Valid To</button>
                 </div>
             </div>
             <p className={classes.labelBold}>Value:</p>

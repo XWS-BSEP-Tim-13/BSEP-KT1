@@ -1,9 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCertificate } from "@fortawesome/free-solid-svg-icons";
 
+import { useSelector } from "react-redux";
+
 import classes from './NewCertificate.module.css';
 
 function NewCertificate() {
+    const user = useSelector((state) => state.user.value);
 
     return (
         <div className={classes.page}>
@@ -21,19 +24,30 @@ function NewCertificate() {
                             <option value="second">Second option</option>
                             <option value="third">Third option</option>
                         </select>
-                        <select name="Issuer" defaultValue="">
-                            <option value="" disabled>Issuer</option>
+                        {user.role === 'ROLE_ADMIN' ?
+                            <select name="Issuer" defaultValue="">
+                                <option value="" disabled>Issuer</option>
+                                <option value="first">First option</option>
+                                <option value="second">Second option</option>
+                                <option value="third">Third option</option>
+                            </select> :
+                            <input type='text' disabled value={`Issuer: ${user.commonName}`}/>
+                        }
+                        <select name="Signer Certificate" defaultValue="">
+                            <option value="" disabled>Signer Certificate</option>
                             <option value="first">First option</option>
                             <option value="second">Second option</option>
                             <option value="third">Third option</option>
                         </select>
                         <select name="CertificateType" defaultValue="">
                             <option value="" disabled>Certificate type</option>
-                            <option value="root">Root</option>
+                            {user.role === 'ROLE_ADMIN' ?
+                                <option value="root">Root</option> : null
+                            }
                             <option value="intermediate">Intermediate</option>
                             <option value="endEntity">End Entity</option>
                         </select>
-                        <input type='text' required placeholder='Valid From' onFocus={(e) => (e.target.type = "date")} onBlur={(e) => (e.target.type = "text")}/>
+                        <input type='text' required placeholder='Valid From' onFocus={(e) => (e.target.type = "date")} onBlur={(e) => (e.target.type = "text")} />
                         <input type='text' required placeholder='Valid To' onFocus={(e) => (e.target.type = "date")} onBlur={(e) => (e.target.type = "text")}/>
                     </div>
                     <div className={classes.formColumn}>
@@ -56,6 +70,10 @@ function NewCertificate() {
                         <div className={classes.checkbox}>
                             <input type='checkbox' id="secureCommunication" />
                             <label htmlFor="secureCommunication">Allows secure communication on the Internet</label>
+                        </div>
+                        <div className={classes.checkbox}>
+                            <input type='checkbox' id="signData" />
+                            <label htmlFor="signData">Allows data to be signed with the current time</label>
                         </div>
                     </div>
                 </div>

@@ -1,14 +1,20 @@
 package com.example.backend.service.interfaces;
 
+import com.example.backend.dto.CertificateBasicDto;
+import com.example.backend.dto.CertificateDto;
 import com.example.backend.dto.CreationCertificateDto;
+import com.example.backend.enums.CertificateType;
+import com.example.backend.model.Certificate;
 import org.springframework.stereotype.Service;
 
-import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.util.List;
 
 @Service
 public interface CertificateService {
-    void test();
-    public boolean saveCertificate(CreationCertificateDto dto);
-
-    Certificate findCertificate(Integer certificateId);
+    Certificate findDbCert(Integer certificateId);
+    X509Certificate findCertificate(Integer certificateId);
+    boolean saveCertificate(CreationCertificateDto dto);
+    List<CertificateBasicDto> findAllByType(CertificateType type);
+    CertificateDto findCertificateInfo(Integer certificateId);
 }

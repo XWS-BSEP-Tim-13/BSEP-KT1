@@ -5,13 +5,17 @@ import App from './App';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 
+import userReducer from './features/user';
+
 import './index.css';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
 
 const store = configureStore({
-    reducer: {}
+    reducer: {
+        user: userReducer,
+    },
 });
 
 root.render(

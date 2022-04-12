@@ -45,8 +45,6 @@ public class CertificationEntity extends BaseEntity implements UserDetails {
 
     private EntityRole entityRole;
 
-    @Transient
-    private PrivateKey privateKey;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "role_id")
@@ -54,9 +52,6 @@ public class CertificationEntity extends BaseEntity implements UserDetails {
 
     @Column(name = "last_password_reset_date")
     private Timestamp lastPasswordResetDate;
-
-    @Column()
-    private PublicKey publicKey;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
