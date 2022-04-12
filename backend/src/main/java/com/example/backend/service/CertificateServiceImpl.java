@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.CreationCertificateDto;
+import com.example.backend.dto.NewCertificateSubjectDTO;
 import com.example.backend.enums.CertificateStatus;
 import com.example.backend.enums.CertificateType;
 import com.example.backend.enums.EntityRole;
@@ -74,6 +75,16 @@ public class CertificateServiceImpl implements CertificateService {
         //List<X509Certificate> allCertificates = keystoreHandler.readAllCertificates(dbCertificate.getCerFileName(), keystorePassword);
 
         return true;
+    }
+
+    public Set<NewCertificateSubjectDTO> getPossibleSubjectsForNewCertificate() {
+        List<CertificationEntity> allEntities = certificationEntityRepository.findAll();
+        Set<NewCertificateSubjectDTO> possibleSubjects = new HashSet<>();
+        for (CertificationEntity entity : allEntities) {
+            if(!entity.getRole().getName().equals("ADMIN"))
+                possibleSubjects.add(new NewCertificateSubjectDTO(entity.getEmail(), entity.getCommonName()));
+        }
+        return possibleSubjects;
     }
 
     private PrivateKey findIssuerPrivateKey(CertificationEntity issuer){

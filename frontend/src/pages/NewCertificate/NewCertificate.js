@@ -2,11 +2,29 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCertificate } from "@fortawesome/free-solid-svg-icons";
 
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 import classes from './NewCertificate.module.css';
 
 function NewCertificate() {
+    const [possibleSubjects, setPossibleSubjects] = useState([]);
     const user = useSelector((state) => state.user.value);
+
+    useEffect(() => {
+        console.log(user)
+        axios.get(`http://localhost:8081/certificate/subjects`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': `Bearer ${user.accessToken}`
+            },
+        }).then((response) => {
+            setPossibleSubjects(response.data);
+            
+            console.log(possibleSubjects);
+        })
+    }, []);
 
     return (
         <div className={classes.page}>

@@ -45,7 +45,6 @@ public class CertificationEntity extends BaseEntity implements UserDetails {
 
     private EntityRole entityRole;
 
-
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "role_id")
     private Role role;
