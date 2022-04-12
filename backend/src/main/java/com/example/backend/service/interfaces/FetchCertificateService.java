@@ -9,4 +9,5 @@ public interface FetchCertificateService {
     List<FetchCertificateDTO> getAllCertificatesByOrganization(String organization);
     List<FetchCertificateDTO> getAllCertificates();
     List<FetchCertificateDTO> getAllCertificatesBySubject(Integer subjectId);
+    List<FetchCertificateDTO> getHierarchyAbove(Integer certificateId);
 }

@@ -107,4 +107,10 @@ public class CertificateController {
         Set<NewCertificateSubjectDTO> subjects = certificateService.getPossibleSubjectsForNewCertificate();
         return new ResponseEntity<>(subjects, HttpStatus.OK);
     }
+    @GetMapping("/hierarchy-above")
+    public ResponseEntity<List<FetchCertificateDTO>> getHierarchyAbove(@RequestParam("id") Integer certificateId){
+        return new ResponseEntity<>(fetchCertificateService.getHierarchyAbove(certificateId), HttpStatus.OK);
+    }
+
+
 }

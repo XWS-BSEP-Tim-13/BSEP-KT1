@@ -1,6 +1,7 @@
 package com.example.backend.util;
 
 import com.example.backend.dto.CreationCertificateDto;
+import com.example.backend.enums.CertificateStatus;
 import com.example.backend.enums.CertificateType;
 import com.example.backend.enums.EntityRole;
 import com.example.backend.keystores.KeystoreHandler;
@@ -108,6 +109,7 @@ public class DataLoader implements ApplicationRunner {
                 .alias("alias1")
                 .publicKey(adminKeyPair.getPublic())
                 .privateKey(adminKeyPair.getPrivate())
+                .certificateStatus(CertificateStatus.GOOD)
                 .build();
         adminCertificate.setId(1);
         adminCertificate.setParentCertificate(adminCertificate);
@@ -123,6 +125,7 @@ public class DataLoader implements ApplicationRunner {
                 .alias("alias2")
                 .publicKey(user1keyPair.getPublic())
                 .privateKey(user1keyPair.getPrivate())
+                .certificateStatus(CertificateStatus.GOOD)
                 .build();
         user1Certificate.setId(2);
 
@@ -137,6 +140,7 @@ public class DataLoader implements ApplicationRunner {
                 .alias("alias3")
                 .publicKey(user2keyPair.getPublic())
                 .privateKey(user2keyPair.getPrivate())
+                .certificateStatus(CertificateStatus.GOOD)
                 .build();
         user2Certificate.setId(3);
 
