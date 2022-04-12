@@ -1,11 +1,8 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.CertificateBasicDto;
-import com.example.backend.dto.CertificateDto;
-import com.example.backend.dto.CreationCertificateDto;
+import com.example.backend.dto.*;
 import com.example.backend.enums.CertificateType;
 import com.example.backend.model.Certificate;
-import com.example.backend.dto.FetchCertificateDTO;
 import com.example.backend.service.interfaces.CertificateService;
 import com.example.backend.service.interfaces.FetchCertificateService;
 import lombok.AllArgsConstructor;
@@ -94,6 +91,4 @@ public class CertificateController {
     public ResponseEntity<List<FetchCertificateDTO>> getBySubject(@RequestParam("id") Integer subjectId){
         return new ResponseEntity<>(fetchCertificateService.getAllCertificatesBySubject(subjectId), HttpStatus.OK);
     }
-
-
 }
