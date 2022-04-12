@@ -1,6 +1,7 @@
 package com.example.backend.util;
 
 import com.example.backend.dto.CreationCertificateDto;
+import com.example.backend.enums.CertificateStatus;
 import com.example.backend.enums.CertificateType;
 import com.example.backend.enums.EntityRole;
 import com.example.backend.keystores.KeystoreHandler;
@@ -74,6 +75,7 @@ public class DataLoader implements ApplicationRunner {
                 .publicKey(adminKeyPair.getPublic())
                 .validFrom(new Date())
                 .subject(admin)
+                .certificateStatus(CertificateStatus.GOOD)
                 .alias("alias")
                 .publicKey(adminKeyPair.getPublic())
                 .privateKey(adminKeyPair.getPrivate())

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,5 +28,11 @@ public class CertificateController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<Void> revokeCertificate(@PathVariable("id") Integer id){
+        certificateService.revokeCertificate(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

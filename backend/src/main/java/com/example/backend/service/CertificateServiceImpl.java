@@ -4,7 +4,9 @@ import com.example.backend.dto.CreationCertificateDto;
 import com.example.backend.enums.CertificateStatus;
 import com.example.backend.enums.CertificateType;
 import com.example.backend.enums.EntityRole;
+import com.example.backend.exception.CertificateAlreadyRevokedException;
 import com.example.backend.keystores.KeystoreHandler;
+import com.example.backend.model.Certificate;
 import com.example.backend.model.CertificationEntity;
 import com.example.backend.model.OrganizationKeystoreAccess;
 import com.example.backend.repository.CertificationEntityRepository;
@@ -13,6 +15,7 @@ import com.example.backend.service.interfaces.CertificateService;
 import com.example.backend.service.interfaces.KeystorePasswordsService;
 import com.example.backend.util.CertificateGenerator;
 import com.example.backend.util.KeyPairGenerator;
+import com.example.backend.util.ParseCertificate;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +34,7 @@ public class CertificateServiceImpl implements CertificateService {
     private final CertificationEntityRepository certificationEntityRepository;
     private final CertificationRepostory certificationRepostory;
     private final KeystorePasswordsService passwordsService;
+    private final ParseCertificate parseCertficate;
 
 
     public boolean saveCertificate(CreationCertificateDto dto){
@@ -136,5 +140,27 @@ public class CertificateServiceImpl implements CertificateService {
         else certificate.setCertificateStatus(CertificateStatus.GOOD);
         
         return certificate;
+    }
+
+    public Boolean revokeCertificate(Integer id){
+        com.example.backend.model.Certificate certificateToRevoke = certificationRepostory.findById(id).get();
+        if(isCertificateRevoked(certificateToRevoke))
+            throw new CertificateAlreadyRevokedException();
+
+        certificateToRevoke.setCertificateStatus(CertificateStatus.REVOKED);
+        certificationRepostory.save(certificateToRevoke);
+        if(certificateToRevoke.isCA())
+            revokeCertificatesSignedByRevokedCA(certificateToRevoke);
+        return true;
+    }
+
+    private void revokeCertificatesSignedByRevokedCA(com.example.backend.model.Certificate revokedCertificate){
+        for(com.example.backend.model.Certificate certificate: certificationRepostory.findCertificatesSignedByIssuer(revokedCertificate.getId()))
+            if(!certificate.getType().equals(CertificateType.SELF_SIGNED))
+                revokeCertificate(certificate.getId());
+    }
+
+    private boolean isCertificateRevoked(Certificate certificateToRevoke) {
+        return certificateToRevoke.getCertificateStatus().equals(CertificateStatus.REVOKED);
     }
 }
