@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.dto.CreationCertificateDto;
 import com.example.backend.enums.CertificateStatus;
+import com.example.backend.dto.FetchCertificateDTO;
 import com.example.backend.enums.CertificateType;
 import com.example.backend.enums.EntityRole;
 import com.example.backend.exception.CertificateAlreadyRevokedException;
@@ -12,6 +13,7 @@ import com.example.backend.model.OrganizationKeystoreAccess;
 import com.example.backend.repository.CertificationEntityRepository;
 import com.example.backend.repository.CertificationRepostory;
 import com.example.backend.service.interfaces.CertificateService;
+import com.example.backend.service.interfaces.FetchCertificateService;
 import com.example.backend.service.interfaces.KeystorePasswordsService;
 import com.example.backend.util.CertificateGenerator;
 import com.example.backend.util.KeyPairGenerator;
@@ -36,6 +38,7 @@ public class CertificateServiceImpl implements CertificateService {
     private final KeystorePasswordsService passwordsService;
     private final ParseCertificate parseCertficate;
 
+    private final FetchCertificateService fetchCertificateService;
 
     public boolean saveCertificate(CreationCertificateDto dto){
         CertificationEntity subject = certificationEntityRepository.findById(dto.getSubjectEntityId()).get();
@@ -75,8 +78,8 @@ public class CertificateServiceImpl implements CertificateService {
         subject.getCertificates().add(dbCertificate);
         certificationEntityRepository.save(subject);
 
-        //List<X509Certificate> allCertificates = keystoreHandler.readAllCertificates(dbCertificate.getCerFileName(), keystorePassword);
-
+        // List<X509Certificate> allCertificates = keystoreHandler.readAllCertificates(dbCertificate.getCerFileName(), keystorePassword);
+        // List<FetchCertificateDTO> fetchCertificates = fetchCertificateService.getAllFromKeystore(dbCertificate.getCerFileName(), keystorePassword);
         return true;
     }
 
