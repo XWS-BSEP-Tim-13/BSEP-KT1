@@ -8,6 +8,7 @@ import com.example.backend.model.Certificate;
 import com.example.backend.model.CertificationEntity;
 import com.example.backend.model.Role;
 import com.example.backend.repository.CertificationEntityRepository;
+import com.example.backend.repository.CertificationRepostory;
 import com.example.backend.repository.RoleRepository;
 import lombok.AllArgsConstructor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -31,14 +32,23 @@ public class DataLoader implements ApplicationRunner {
     private final CertificationEntityRepository entityRepository;
     private final KeystoreHandler keystoreHandler;
     private final RoleRepository roleRepository;
+    private final CertificationRepostory certificationRepostory;
 
     public void run(ApplicationArguments args) {
         Security.addProvider(new BouncyCastleProvider());
-        KeyPair issuerKeyPair = keyPairGenerator.generateKeyPair();
+
+        KeyPair user1keyPair = keyPairGenerator.generateKeyPair();
+        KeyPair user2keyPair = keyPairGenerator.generateKeyPair();
+        KeyPair adminKeyPair = keyPairGenerator.generateKeyPair();
+
         Role adminRole = Role.builder().name("ROLE_ADMIN").build();
         Role subsystemRole = Role.builder().name("ROLE_SUBSYSTEM").build();
         Role userRole = Role.builder().name("ROLE_USER").build();
-        KeyPair adminKeyPair = keyPairGenerator.generateKeyPair();
+
+        roleRepository.save(adminRole);
+        roleRepository.save(userRole);
+        roleRepository.save(subsystemRole);
+
         CertificationEntity admin = CertificationEntity.builder()
                 .commonName("Admin")
                 .countryCode("RS")
@@ -52,44 +62,112 @@ public class DataLoader implements ApplicationRunner {
                 .build();
         admin.setId(1);
 
+        CertificationEntity user1 = CertificationEntity.builder()
+                .commonName("User One")
+                .countryCode("RS")
+                .email("u1@u.com")
+                .organization("FTN")
+                .entityRole(EntityRole.USER)
+                .password("$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW")
+                .organizationUnit("Katedra za informatiku")
+                .certificates(new ArrayList<>())
+                .role(userRole)
+                .build();
+        user1.setId(2);
+
+        CertificationEntity user2 = CertificationEntity.builder()
+                .commonName("User Two")
+                .countryCode("RS")
+                .email("u2@u.com")
+                .organization("FTN")
+                .entityRole(EntityRole.USER)
+                .password("$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW")
+                .organizationUnit("Katedra za racunarstvo")
+                .certificates(new ArrayList<>())
+                .role(userRole)
+                .build();
+        user2.setId(3);
+
+
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.YEAR, 30);
         Date endDate = cal.getTime();
 
-        CreationCertificateDto creationCertificateDto = CreationCertificateDto.builder()
-                .certificateType(CertificateType.SELF_SIGNED)
-                .expiringDate(endDate)
-                .purposes(new ArrayList<String>(Arrays.asList("Proves your identity to a remote computer")))
-                .validFrom(new Date())
-                .signerCertificateId(1)
-                .build();
-
-        Certificate certificate = Certificate.builder()
+        Certificate adminCertificate = Certificate.builder()
                 .expiringDate(endDate)
                 .cerFileName("keystore/ADMIN.jks")
                 .purposes(new ArrayList<>(Arrays.asList("Proves your identity to a remote computer")))
                 .type(CertificateType.SELF_SIGNED)
                 .isCA(true)
-                .publicKey(adminKeyPair.getPublic())
                 .validFrom(new Date())
                 .subject(admin)
-                .alias("alias")
+                .alias("alias1")
                 .publicKey(adminKeyPair.getPublic())
                 .privateKey(adminKeyPair.getPrivate())
                 .build();
-        certificate.setParentCertificate(certificate);
+        adminCertificate.setId(1);
+        adminCertificate.setParentCertificate(adminCertificate);
 
-        X509Certificate cert = certificateGenerator.generateCertificate(certificate, certificate);
+        Certificate user1Certificate = Certificate.builder()
+                .expiringDate(endDate)
+                .cerFileName("keystore/FTN.jks")
+                .purposes(new ArrayList<>(Arrays.asList("Proves your identity to a remote computer")))
+                .type(CertificateType.INTERMEDIATE)
+                .isCA(true)
+                .validFrom(new Date())
+                .subject(user1)
+                .alias("alias2")
+                .publicKey(user1keyPair.getPublic())
+                .privateKey(user1keyPair.getPrivate())
+                .build();
+        user1Certificate.setId(2);
 
-        admin.getCertificates().add(certificate);
-        roleRepository.save(adminRole);
-        roleRepository.save(userRole);
-        roleRepository.save(subsystemRole);
-        entityRepository.save(admin);
+        Certificate user2Certificate = Certificate.builder()
+                .expiringDate(endDate)
+                .cerFileName("keystore/FTN.jks")
+                .purposes(new ArrayList<>(Arrays.asList("Proves your identity to a remote computer")))
+                .type(CertificateType.INTERMEDIATE)
+                .isCA(true)
+                .validFrom(new Date())
+                .subject(user2)
+                .alias("alias3")
+                .publicKey(user2keyPair.getPublic())
+                .privateKey(user2keyPair.getPrivate())
+                .build();
+        user2Certificate.setId(3);
+
+        X509Certificate adminCert = certificateGenerator.generateCertificate(adminCertificate, adminCertificate);
+
+        admin.getCertificates().add(adminCertificate);
+        admin = entityRepository.save(admin);
+        adminCertificate = admin.getCertificates().get(0);
+        user1Certificate.setParentCertificate(adminCertificate);
+        adminCertificate.setPrivateKey(adminKeyPair.getPrivate());
+
         keystoreHandler.loadKeyStore(null, "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray());
-        keystoreHandler.write("alias", adminKeyPair.getPrivate(), "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray(), cert);
+        keystoreHandler.write("alias1", adminKeyPair.getPrivate(), "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray(), adminCert);
         keystoreHandler.saveKeyStore("keystore/ADMIN.jks", "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray());
+
+        X509Certificate user1Cert = certificateGenerator.generateCertificate(user1Certificate, adminCertificate);
+
+        user1.getCertificates().add(user1Certificate);
+        user1 = entityRepository.save(user1);
+        user1Certificate = user1.getCertificates().get(0);
+        user1Certificate.setPrivateKey(user1keyPair.getPrivate());
+        user2Certificate.setParentCertificate(user1Certificate);
+
+
+        keystoreHandler.loadKeyStore(null, "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray());
+        keystoreHandler.write("alias2", user1keyPair.getPrivate(), "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray(), user1Cert);
+        keystoreHandler.saveKeyStore("keystore/FTN.jks", "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray());
+
+        X509Certificate user2Cert = certificateGenerator.generateCertificate(user2Certificate, user1Certificate);
+        user2.getCertificates().add(user2Certificate);
+        entityRepository.save(user2);
+        keystoreHandler.loadKeyStore(null, "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray());
+        keystoreHandler.write("alias3", user2keyPair.getPrivate(), "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray(), user2Cert);
+        keystoreHandler.saveKeyStore("keystore/FTN.jks", "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray());
 
     }
 }

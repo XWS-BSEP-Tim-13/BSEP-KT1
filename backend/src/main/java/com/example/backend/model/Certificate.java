@@ -1,8 +1,7 @@
 package com.example.backend.model;
 
 import com.example.backend.enums.CertificateType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,9 +23,10 @@ public class Certificate extends BaseEntity{
     @JsonIgnoreProperties("certificates")
     private CertificationEntity subject;
 
-    @JsonIgnoreProperties("parent_certificate")
+
     @ManyToOne
-    @JoinColumn(name="parent_certificate")
+    @JoinColumn(name="parent_certificate", referencedColumnName = "id")
+    @JsonIgnoreProperties("parent_certificate")
     private Certificate parentCertificate;
 
     @Column(name="valid_from")
