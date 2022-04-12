@@ -6,6 +6,7 @@ import com.example.backend.dto.CreationCertificateDto;
 import com.example.backend.enums.CertificateType;
 import com.example.backend.model.Certificate;
 import com.example.backend.dto.FetchCertificateDTO;
+import com.example.backend.dto.NewCertificateSubjectDTO;
 import com.example.backend.service.interfaces.CertificateService;
 import com.example.backend.service.interfaces.FetchCertificateService;
 import lombok.AllArgsConstructor;
@@ -24,18 +25,21 @@ import java.security.cert.X509Certificate;
 
 import java.util.List;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 @RestController
 @RequestMapping("/certificate")
 @AllArgsConstructor
 public class CertificateController {
-
 
     private final CertificateService certificateService;
     private Environment environment;
     private final FetchCertificateService fetchCertificateService;
 
 
-    @PostMapping()
+    @PostMapping("/")
     public ResponseEntity<Void> saveCertificate(@RequestBody CreationCertificateDto dto){
         if(!certificateService.saveCertificate(dto)) return new ResponseEntity("Something went wrong", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -50,6 +54,7 @@ public class CertificateController {
     public ResponseEntity<CertificateDto> findById(@PathVariable Integer id){
         return new ResponseEntity<>(certificateService.findCertificateInfo(id),HttpStatus.OK);
     }
+
     @GetMapping("/download/{certificateId}")
     public ResponseEntity<Void> downloadCertificate(@PathVariable Integer certificateId) {
         X509Certificate certificate = certificateService.findCertificate(certificateId);
@@ -74,12 +79,14 @@ public class CertificateController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @PutMapping("/{id}")
     //@PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> revokeCertificate(@PathVariable("id") Integer id){
         certificateService.revokeCertificate(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @GetMapping("/all")
     public ResponseEntity<List<FetchCertificateDTO>> getAll(){
         return new ResponseEntity<>(fetchCertificateService.getAllCertificates(), HttpStatus.OK);
@@ -95,5 +102,9 @@ public class CertificateController {
         return new ResponseEntity<>(fetchCertificateService.getAllCertificatesBySubject(subjectId), HttpStatus.OK);
     }
 
-
+    @GetMapping("/subjects")
+    public ResponseEntity<Set<NewCertificateSubjectDTO>> getPossibleSubjectsForNewCertificate() {
+        Set<NewCertificateSubjectDTO> subjects = certificateService.getPossibleSubjectsForNewCertificate();
+        return new ResponseEntity<>(subjects, HttpStatus.OK);
+    }
 }

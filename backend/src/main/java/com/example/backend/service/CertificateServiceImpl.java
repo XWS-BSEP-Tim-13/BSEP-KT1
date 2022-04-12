@@ -3,6 +3,7 @@ package com.example.backend.service;
 import com.example.backend.dto.CertificateBasicDto;
 import com.example.backend.dto.CertificateDto;
 import com.example.backend.dto.CreationCertificateDto;
+import com.example.backend.dto.NewCertificateSubjectDTO;
 import com.example.backend.enums.CertificateStatus;
 import com.example.backend.dto.FetchCertificateDTO;
 import com.example.backend.enums.CertificateType;
@@ -121,10 +122,31 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public X509Certificate findCertificate(Integer certificateId) {
-        com.example.backend.model.Certificate dbCert=certificationRepostory.findById(certificateId).get();
-        String password=passwordsService.findPasswordByOrganization(dbCert.getSubject().getOrganization());
+        com.example.backend.model.Certificate dbCert = certificationRepostory.findById(certificateId).get();
+        String password = passwordsService.findPasswordByOrganization(dbCert.getSubject().getOrganization());
         keystoreHandler.loadKeyStore(dbCert.getCerFileName(), password.toCharArray());
-        return keystoreHandler.readCertificate(dbCert.getCerFileName(),password, dbCert.getAlias());
+        return keystoreHandler.readCertificate(dbCert.getCerFileName(), password, dbCert.getAlias());
+    }
+
+    @Override
+    public Set<NewCertificateSubjectDTO> getPossibleSubjectsForNewCertificate() {
+        List<CertificationEntity> allEntities = certificationEntityRepository.findAll();
+        Set<NewCertificateSubjectDTO> possibleSubjects = new HashSet<>();
+        for (CertificationEntity entity : allEntities) {
+            if(!entity.getRole().getName().equals("ROLE_ADMIN")) {
+                boolean rootForOrganizationExists = checkIfRootForOrganizationExists(entity.getOrganization());
+                possibleSubjects.add(new NewCertificateSubjectDTO(entity.getEmail(), entity.getCommonName(), entity.getId(), entity.getOrganization(), rootForOrganizationExists));
+            }
+        }
+        return possibleSubjects;
+    }
+
+    private boolean checkIfRootForOrganizationExists(String organization) {
+        List<Certificate> certificates = certificationRepostory.findAll();
+        for (Certificate certificate : certificates) {
+            if (organization.equals(certificate.getSubject().getOrganization())) return true;
+        }
+        return false;
     }
 
     private PrivateKey findIssuerPrivateKey(CertificationEntity issuer){
