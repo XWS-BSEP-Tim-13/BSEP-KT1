@@ -40,7 +40,7 @@ h1 {
 .buttonLogIn {
     width: 50%;
     align-self: center;
-    margin-top: 3rem;
+    margin-top: 2.5rem;
     margin-bottom: 1rem;
     height: 3rem;
     font-size: 1rem;
@@ -62,6 +62,12 @@ h1 {
     font-size: 0.8rem;
     color: #244861;
     align-self: center;
+}
+
+.errorMessage {
+    color: rgb(195, 0, 0);
+    font-size: 0.9rem;
+    margin: auto;
 }
 
 @media (max-width: 60rem) {

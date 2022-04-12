@@ -13,6 +13,7 @@
     text-decoration: none;
     color: white;
     padding: 0.5rem 1rem;
+    font-size: 0.95rem;
 }
 
 .link:hover,
@@ -46,6 +47,7 @@
     text-decoration: none;
     color: white;
     padding: 0.5rem 2rem;
+    font-size: 0.95rem;
 }
 
 .mobileLink:hover,
