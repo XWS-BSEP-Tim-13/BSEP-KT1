@@ -14,6 +14,7 @@ public class CertificateBasicDto {
 
     private String issuer;
     private String subject;
+    private String subjectEmail;
     private Integer id;
     private CertificateType type;
 }

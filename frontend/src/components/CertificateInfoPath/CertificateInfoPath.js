@@ -26,7 +26,7 @@ function CertificateInfoPath(props) {
                 {
                     hierarchy.map((certificate) => {
                         return <div  key={certificate.certificateId}>
-                                    <div> {certificate.subjectCommonName} </div> 
+                                    <div> {certificate.subjectCommonName} (SN {certificate.certificateId}) </div> 
                                     {(certificate.certificateId !== props.certificate.serialNumber) && <div> | </div>}
                                 </div>
                     })

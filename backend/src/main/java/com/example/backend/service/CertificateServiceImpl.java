@@ -97,6 +97,7 @@ public class CertificateServiceImpl implements CertificateService {
                     .type(cert.getType())
                     .issuer(cert.getParentCertificate().getSubject().getCommonName())
                     .subject(cert.getSubject().getCommonName())
+                    .subjectEmail(cert.getSubject().getEmail())
                     .id(cert.getId())
                     .build();
             list.add(dto);
@@ -116,7 +117,9 @@ public class CertificateServiceImpl implements CertificateService {
         retVal.setSignatureAlgorithm(pubKey.getAlgorithm());
         retVal.setValitdTo(cert.getExpiringDate());
         retVal.setSignatureHashAlgorithm(x509Certificate.getSigAlgName());
-        if(!isCertificateValidByDate(certificateId))
+        retVal.setCertificateStatus(cert.getCertificateStatus());
+
+        if(!isCertificateValidByDate(certificateId) && !cert.getCertificateStatus().equals(CertificateStatus.REVOKED))
             retVal.setCertificateStatus(CertificateStatus.INVALID);
 
         return retVal;

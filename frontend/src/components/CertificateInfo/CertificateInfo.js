@@ -7,6 +7,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import classes from './CertificateInfo.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CertificationService from '../../services/CertificationService';
+import axios from 'axios';
 
 function CertificateInfo(props) {
     const [selectedTab, setSelectedTab] = useState('general');
@@ -26,9 +27,12 @@ function CertificateInfo(props) {
 
     function revokeCertificateHandler() {
         //ajax za povlacenje sertifikata
-        CertificationService.findCertificateById(props.certificateId)
-        .then(resp=>{
-            setCertificate(resp.data)
+        axios.put(`http://localhost:8081/certificate/${props.certificateId}`)
+        .then(() => {
+            CertificationService.findCertificateById(props.certificateId)
+            .then(resp=>{
+                setCertificate(resp.data)
+            })
         })
     }
 
