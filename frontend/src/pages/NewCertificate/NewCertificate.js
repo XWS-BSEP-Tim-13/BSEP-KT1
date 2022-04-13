@@ -27,7 +27,6 @@ function NewCertificate() {
     const certificateType = useRef();
 
     useEffect(() => {
-        console.log(user);
         axios.get(`http://localhost:8081/certification-entity/subjects`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -40,7 +39,6 @@ function NewCertificate() {
     }, []);
 
     useEffect(() => {
-        console.log(possibleIssuers);
         if (possibleIssuers.length > 0 && user.role !== 'ROLE_ADMIN') {
             const selectedIssuerEmail = user.email;
             const selectedIssuerObject = possibleIssuers.filter((issuer) => issuer.email == selectedIssuerEmail);
