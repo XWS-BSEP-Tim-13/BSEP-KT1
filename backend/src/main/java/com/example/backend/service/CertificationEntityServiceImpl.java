@@ -3,6 +3,7 @@ package com.example.backend.service;
 import com.example.backend.dto.CertificateDto;
 import com.example.backend.dto.CertificateIssuerDTO;
 import com.example.backend.dto.NewCertificateSubjectDTO;
+import com.example.backend.enums.CertificateStatus;
 import com.example.backend.enums.CertificateType;
 import com.example.backend.enums.EntityRole;
 import com.example.backend.model.Certificate;
@@ -73,7 +74,7 @@ public class CertificationEntityServiceImpl implements CertificationEntityServic
     private List<CertificateDto> getCertificatesDto(List<Certificate> certificates){
         List<CertificateDto> ret = new ArrayList<>();
         for(com.example.backend.model.Certificate cert: certificates)
-            if(!cert.getType().equals(CertificateType.END_ENTITY))
+            if(!cert.getType().equals(CertificateType.END_ENTITY) && cert.getCertificateStatus().equals(CertificateStatus.GOOD))
                 ret.add(mapCertificate(cert.getId()));
 
         return ret;
