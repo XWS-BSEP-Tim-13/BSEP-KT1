@@ -10,13 +10,12 @@ import com.example.backend.model.Certificate;
 import com.example.backend.model.CertificationEntity;
 import com.example.backend.repository.CertificationEntityRepository;
 import com.example.backend.repository.CertificationRepostory;
+import com.example.backend.service.interfaces.CertificateService;
 import com.example.backend.service.interfaces.CertificationEntityService;
 import lombok.AllArgsConstructor;
-import org.hibernate.id.ForeignGenerator;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +28,7 @@ public class CertificationEntityServiceImpl implements CertificationEntityServic
 
     private final CertificationEntityRepository certificationEntityRepository;
     private final CertificationRepostory certificationRepostory;
+    private final CertificateService certficateService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -57,6 +57,7 @@ public class CertificationEntityServiceImpl implements CertificationEntityServic
         return certificationEntityRepository.findAllIssuers(EntityRole.SUBSYSTEM,EntityRole.ADMIN);
     }
 
+    @Override
     public List<CertificationEntity> findIssuersByOrganization(String organization) {
         return certificationEntityRepository.findAllIssuersByOrganization(organization);
     }
@@ -66,18 +67,22 @@ public class CertificationEntityServiceImpl implements CertificationEntityServic
         List<CertificationEntity> issuersFromOrganization = findIssuersByOrganization(organization).stream().filter(i -> !i.getCertificates().isEmpty()).collect(Collectors.toList());
         List<CertificateIssuerDTO> ret = new ArrayList<>();
         for(CertificationEntity entity: issuersFromOrganization) {
-            ret.add(CertificateIssuerDTO.builder().commonName(entity.getCommonName()).certificates(getCertificatesDto(entity.getCertificates())).id(entity.getId()).email(entity.getEmail()).build());
+            ret.add(CertificateIssuerDTO.builder().commonName(entity.getCommonName()).certificates(getSuitableCertificates(entity.getCertificates())).id(entity.getId()).email(entity.getEmail()).build());
         }
         return ret;
     }
 
-    private List<CertificateDto> getCertificatesDto(List<Certificate> certificates){
+    private List<CertificateDto> getSuitableCertificates(List<Certificate> certificates){
         List<CertificateDto> ret = new ArrayList<>();
         for(com.example.backend.model.Certificate cert: certificates)
-            if(!cert.getType().equals(CertificateType.END_ENTITY) && cert.getCertificateStatus().equals(CertificateStatus.GOOD))
+            if(isCertificateSuitableForSigningNewCertificate(cert))
                 ret.add(mapCertificate(cert.getId()));
 
         return ret;
+    }
+
+    private boolean isCertificateSuitableForSigningNewCertificate(Certificate cert) {
+        return !cert.getType().equals(CertificateType.END_ENTITY) && certficateService.isCertificateValidByDate(cert.getId());
     }
 
     private CertificateDto mapCertificate(Integer certificateId) {
