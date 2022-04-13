@@ -10,6 +10,7 @@ import classes from './NewCertificate.module.css';
 
 function NewCertificate() {
     const [possibleSubjects, setPossibleSubjects] = useState([]);
+    const [selectedSubject, setSelectedSubject] = useState({});
     const [purposes, setPurposes] = useState([]);
 
     const user = useSelector((state) => state.user.value);
@@ -23,7 +24,8 @@ function NewCertificate() {
     const certificateType = useRef();
 
     useEffect(() => {
-        console.log(user)
+        console.log(user);
+        console.log(selectedSubject)
         axios.get(`http://localhost:8081/certificate/subjects`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -38,18 +40,51 @@ function NewCertificate() {
     function addNewCertificateHandler(event) {
         event.preventDefault();
         
-        const newCertificate = {
-            validFrom: validFrom.current.value,
-            expiringDate: expiringDate.current.value,
-            certificateType: certificateType.current.value,
-            purposes: purposes,
-            subjectEntityId: subjectEntityId.current.value,
-            signerCertificateId: signerCertificateId.current.value
+        var newCertificate = {}
+        if(!selectedSubject.rootForOrganizationExists) {
+            newCertificate = {
+                validFrom: validFrom.current.value,
+                expiringDate: expiringDate.current.value,
+                certificateType: "ROOT",
+                purposes: purposes,
+                subjectEntityId: subjectEntityId.current.value,
+                signerCertificateId: 1
+            }
+        } else {
+            newCertificate = {
+                validFrom: validFrom.current.value,
+                expiringDate: expiringDate.current.value,
+                certificateType: certificateType.current.value,
+                purposes: purposes,
+                subjectEntityId: subjectEntityId.current.value,
+                signerCertificateId: signerCertificateId.current.value
+            }
         }
 
         console.log(newCertificate);
+        axios.post(`http://localhost:8081/certificate/`, newCertificate, {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': `Bearer ${user.accessToken}`
+            },
+        })
+        .then(() => {
+            navigate("/allCertificates");
+        })
+        .catch((error) => {
+            console.log(error.data);
+        })
+    }
 
-        navigate("/allCertificates");
+    function subjectSelectedHandler() {
+        const selectedSubjectId = subjectEntityId.current.value;
+        const selectedSubjectObject = possibleSubjects.filter((subject) => subject.id == selectedSubjectId)
+        setSelectedSubject(selectedSubjectObject[0])
+
+        if(selectedSubject.rootForOrganizationExists) {
+            //axios.get(...)
+        }
     }
 
     return (
@@ -62,10 +97,10 @@ function NewCertificate() {
             <form className={classes.form} onSubmit={addNewCertificateHandler}>
                 <div className={classes.formRow}>
                     <div className={classes.formColumn}>
-                        <select name="Subject" defaultValue="" ref={subjectEntityId}>
+                        <select name="Subject" defaultValue="" ref={subjectEntityId} onChange={subjectSelectedHandler}>
                             <option value="" disabled>Subject</option>
                             {   possibleSubjects.map((possibleSubject) => {
-                                    if((user.role !== 'ROLE_ADMIN' && possibleSubject.rootForOrganizationExists && user.organization === possibleSubject.organization)
+                                    if((user.role !== 'ROLE_ADMIN' && possibleSubject.rootForOrganizationExists && user.organization === possibleSubject.organization && possibleSubject.email !== user.email)
                                         || user.role === 'ROLE_ADMIN') {
                                             return <option key={possibleSubject.email} value={possibleSubject.id}>
                                                 {possibleSubject.commonName} ({possibleSubject.email})
@@ -75,38 +110,53 @@ function NewCertificate() {
                             }
                         </select>
 
-                        {user.role === 'ROLE_ADMIN' ?
+                        {(user.role === 'ROLE_ADMIN' && selectedSubject.rootForOrganizationExists) ?
                             <select name="Issuer" defaultValue="">
                                 <option value="" disabled>Issuer</option>
+                                <option value="second">Second option</option>
+                                <option value="third">Third option</option>
+                            </select> : null }
+                        {(user.role === 'ROLE_ADMIN' && !selectedSubject.rootForOrganizationExists) ?
+                            <input type='text' disabled value="Issuer: Admin"/> : null
+                        }
+                        { user.role !== 'ROLE_ADMIN' ?
+                            <input type='text' disabled value={`Issuer: ${user.commonName}`}/> : null
+                        }
+
+                        {(!selectedSubject.rootForOrganizationExists) ? 
+                            <input type='text' disabled value="Signer Certificate: 1 (admin)"/> :
+                            <select name="Signer Certificate" defaultValue=""  ref={signerCertificateId}>
+                                <option value="" disabled>Signer Certificate</option>
                                 <option value="first">First option</option>
                                 <option value="second">Second option</option>
                                 <option value="third">Third option</option>
-                            </select> :
-                            <input type='text' disabled value={`Issuer: ${user.commonName}`}/>
+                            </select>
                         }
 
-                        <select name="Signer Certificate" defaultValue=""  ref={signerCertificateId}>
-                            <option value="" disabled>Signer Certificate</option>
-                            <option value="first">First option</option>
-                            <option value="second">Second option</option>
-                            <option value="third">Third option</option>
-                        </select>
-
-                        <select name="CertificateType" defaultValue="" ref={certificateType}>
-                            <option value="" disabled>Certificate type</option>
-                            {user.role === 'ROLE_ADMIN' ?
-                                <option value="SELF_SIGNED">Root</option> : null
-                            }
-                            <option value="INTERMEDIATE">Intermediate</option>
-                            <option value="END_ENTITY">End Entity</option>
-                        </select>
+                        {(user.role === 'ROLE_ADMIN' && selectedSubject.rootForOrganizationExists) ?
+                            <select name="CertificateType" defaultValue="" ref={certificateType}>
+                                <option value="" disabled>Certificate type</option>
+                                <option value="INTERMEDIATE">Intermediate</option>
+                                <option value="END_ENTITY">End Entity</option>
+                            </select> : null
+                        }
+                        {(user.role === 'ROLE_ADMIN' && !selectedSubject.rootForOrganizationExists) ?
+                            <input type='text' disabled value="Certificate Type: Root"/> : null
+                        }
+                        {user.role !== 'ROLE_ADMIN' ?
+                            <select name="CertificateType" defaultValue="" ref={certificateType}>
+                                <option value="" disabled>Certificate type</option>
+                                <option value="INTERMEDIATE">Intermediate</option>
+                                <option value="END_ENTITY">End Entity</option>
+                            </select> : null
+                        }
 
                         <input type='text' required placeholder='Valid From' onFocus={(e) => (e.target.type = "date")} onBlur={(e) => (e.target.type = "text")} ref={validFrom}/>
                         <input type='text' required placeholder='Valid To' onFocus={(e) => (e.target.type = "date")} onBlur={(e) => (e.target.type = "text")} ref={expiringDate}/>
                     </div>
                     <div className={classes.formColumn}>
                         <div className={classes.checkbox}>
-                            <input type='checkbox' id="provesIdentity" onChange={() => setPurposes(purposes.push("Proves the identity to a remote computer"))}/>
+                            <input type='checkbox' id="provesIdentity" onChange={() => setPurposes([...purposes, "Proves the identity to a remote computer"])}/>
                             <label htmlFor="provesIdentity">Proves the identity to a remote computer</label>
                         </div>
                         <div className={classes.checkbox}>
