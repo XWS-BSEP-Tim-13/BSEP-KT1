@@ -112,6 +112,10 @@ public class CertificateServiceImpl implements CertificateService {
         retVal.setPublicKey(pubKey.getModulus().toString());
         retVal.setSignatureAlgorithm(pubKey.getAlgorithm());
         retVal.setValitdTo(cert.getExpiringDate());
+
+        if(!isCertificateValidByDate(certificateId))
+            retVal.setCertificateStatus(CertificateStatus.INVALID);
+
         return retVal;
     }
 
@@ -139,6 +143,36 @@ public class CertificateServiceImpl implements CertificateService {
             }
         }
         return possibleSubjects;
+    }
+
+    @Override
+    public boolean isCertificateValidByDate(Integer certificateId) {
+        Certificate certificate = certificationRepostory.findById(certificateId).get();
+        Date currentDate = new Date();
+
+        while(certificate.getParentCertificate().getId() != certificate.getId()){
+            Date validFrom = certificate.getValidFrom();
+            Date expiringDate = certificate.getExpiringDate();
+
+            if(!(currentDate.after(validFrom) && currentDate.before(expiringDate))){
+                return false;
+            }
+
+
+            certificate = certificate.getParentCertificate();
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean isCertificateValidByDate(Date certificateValidFrom, Date certificateExpiringDate) {
+        Date currentDate = new Date();
+
+        if(currentDate.after(certificateValidFrom) && currentDate.before(certificateExpiringDate))
+            return true;
+
+        return false;
     }
 
     private boolean checkIfRootForOrganizationExists(String organization) {

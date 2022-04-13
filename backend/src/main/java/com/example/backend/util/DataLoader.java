@@ -23,6 +23,8 @@ import org.springframework.stereotype.Component;
 import java.security.KeyPair;
 import java.security.Security;
 import java.security.cert.X509Certificate;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Component
@@ -146,6 +148,7 @@ public class DataLoader implements ApplicationRunner {
                 .purposes(new ArrayList<>(Arrays.asList("Proves your identity to a remote computer")))
                 .type(CertificateType.INTERMEDIATE)
                 .isCA(true)
+                //.validFrom(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)))
                 .validFrom(new Date())
                 .subject(user2)
                 .alias("alias3")

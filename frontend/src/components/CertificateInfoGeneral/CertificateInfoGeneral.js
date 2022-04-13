@@ -5,26 +5,26 @@ import CertificationService from '../../services/CertificationService';
 
 function CertificateInfoGeneral(props) {
 
-    function downloadCertificate(){
+    function downloadCertificate() {
         CertificationService.downloadCertificate(props.certificate.id)
-        .then(resp=>{
-            
-        })
+            .then(resp => {
+
+            })
     }
-    function getDate(timestamp){
+    function getDate(timestamp) {
         let date = new Date(timestamp);
-        if(isNaN(timestamp)) date=new Date() 
+        if (isNaN(timestamp)) date = new Date()
 
-    var month = date.getMonth() + 1;
-    var day = date.getDate();
-    month = (month < 10 ? "0" : "") + month;
-    day = (day < 10 ? "0" : "") + day;
-
-
-    var str = day + "-" + month + "-" + date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        month = (month < 10 ? "0" : "") + month;
+        day = (day < 10 ? "0" : "") + day;
 
 
-    return str;
+        var str = day + "-" + month + "-" + date.getFullYear();
+
+
+        return str;
     }
 
     return (
@@ -57,7 +57,7 @@ function CertificateInfoGeneral(props) {
                 <p className={classes.label}> {getDate(props.certificate.validTo)} </p>
             </div>
             <div className={classes.download}>
-            <FontAwesomeIcon icon={faDownload} className={classes.downloadIcon} onClick={downloadCertificate}/>
+                <FontAwesomeIcon icon={faDownload} className={classes.downloadIcon} onClick={downloadCertificate} />
             </div>
         </div>
     );

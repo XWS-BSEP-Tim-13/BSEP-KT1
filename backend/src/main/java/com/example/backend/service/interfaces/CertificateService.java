@@ -9,6 +9,7 @@ import com.example.backend.model.Certificate;
 import org.springframework.stereotype.Service;
 
 import java.security.cert.X509Certificate;
+import java.util.Date;
 import java.util.List;
 import com.example.backend.dto.NewCertificateSubjectDTO;
 import java.util.Set;
@@ -23,4 +24,6 @@ public interface CertificateService {
     CertificateDto findCertificateInfo(Integer certificateId);
     Boolean revokeCertificate(Integer id);
     Set<NewCertificateSubjectDTO> getPossibleSubjectsForNewCertificate();
+    boolean isCertificateValidByDate(Integer certificateId);
+    boolean isCertificateValidByDate(Date certificateValidFrom, Date certificateExpiringDate);
 }
