@@ -153,7 +153,7 @@ function NewCertificate() {
                                 <option value="" disabled>Signer Certificate</option>
                                 {possibleIssuersCertificates.map((certificate) => {
                                     return <option key={certificate.id} value={certificate.id}>
-                                        SN {certificate.id} (type: {certificate.certificateType})
+                                        SN {certificate.id} (type: {certificate.type})
                                     </option>;
                                     })
                                 }
