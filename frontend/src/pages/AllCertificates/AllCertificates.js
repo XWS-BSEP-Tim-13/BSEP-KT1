@@ -16,8 +16,8 @@ function AllCertificates() {
     
     useEffect(()=>{
         let type = 0
-        if(selectedType == 'ee') type = 2
-        else if (selectedType =="ca") type=1
+        if(selectedType === 'ee') type = 2
+        else if (selectedType ==="ca") type=1
         CertificationService.findCertificatesByType(type)
         .then(resp=>{
             setCertificates(resp.data)

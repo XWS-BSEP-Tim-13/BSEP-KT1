@@ -92,7 +92,18 @@ public class DataLoader implements ApplicationRunner {
                 .build();
         user2.setId(3);
 
-
+        CertificationEntity user3 = CertificationEntity.builder()
+                .commonName("PMF 1")
+                .countryCode("RS")
+                .email("u3@u.com")
+                .organization("PMF")
+                .entityRole(EntityRole.SUBSYSTEM)
+                .password("$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW")
+                .organizationUnit("Katedra za matematiku")
+                .certificates(new ArrayList<>())
+                .role(subsystemRole)
+                .build();
+        user3.setId(4);
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.YEAR, 30);
@@ -118,7 +129,7 @@ public class DataLoader implements ApplicationRunner {
                 .expiringDate(endDate)
                 .cerFileName("keystore/FTN.jks")
                 .purposes(new ArrayList<>(Arrays.asList("Proves your identity to a remote computer")))
-                .type(CertificateType.INTERMEDIATE)
+                .type(CertificateType.ROOT)
                 .isCA(true)
                 .validFrom(new Date())
                 .subject(user1)
@@ -177,5 +188,6 @@ public class DataLoader implements ApplicationRunner {
         keystoreHandler.write("alias3", user2keyPair.getPrivate(), "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray(), user2Cert);
         keystoreHandler.saveKeyStore("keystore/FTN.jks", "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray());
 
+        entityRepository.save(user3);
     }
 }

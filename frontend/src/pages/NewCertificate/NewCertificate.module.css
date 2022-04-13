@@ -53,6 +53,10 @@
     height: 2.1rem;
 }
 
+.formColumn > input:disabled {
+    color: black;
+}
+
 .checkbox {
     display: flex;
     align-items: center;

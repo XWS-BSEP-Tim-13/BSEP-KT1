@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import Backdrop from '../Backdrop/Backdrop.js';
 import CertificateInfo from '../CertificateInfo/CertificateInfo.js';
@@ -7,15 +7,6 @@ import classes from './CertificatesList.module.css';
 function CertificatesList(props) {
     const [showCertificateInfo, setShowCertificateInfo] = useState(false);
     const [certificateId, setCertificateId] = useState('');
-    const [isListEmpty, setIsListEmpty] = useState(true);
-
-    useEffect(() => {
-        props.certificates.forEach((certificate) => {
-            if(certificate.type === props.selectedType) {
-                setIsListEmpty(false);
-            }
-        })
-    }, [props.certificates, props.selectedType]);
 
     function showCertificateInfoHandler(id) {
         setCertificateId(id);
@@ -39,7 +30,7 @@ function CertificatesList(props) {
                         </div>
                 })
             }
-            { props.certificates.length ==0 ? <p>There is nothing here...</p> : null }
+            { props.certificates.length === 0 ? <p>There is nothing here...</p> : null }
             { showCertificateInfo ? <Backdrop click={closeCertificateInfoHandler}/> : null }
             { showCertificateInfo ? <CertificateInfo certificateId={certificateId} click={closeCertificateInfoHandler}/> : null }
         </div>
