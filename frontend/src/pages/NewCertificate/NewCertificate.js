@@ -65,7 +65,7 @@ function NewCertificate() {
         }
 
         console.log(newCertificate);
-        /*axios.post(`http://localhost:8081/certificate/`, newCertificate, {
+        axios.post(`http://localhost:8081/certificate/`, newCertificate, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -77,7 +77,7 @@ function NewCertificate() {
         })
         .catch((error) => {
             console.log(error.data);
-        })*/
+        });
     }
 
     function subjectSelectedHandler() {

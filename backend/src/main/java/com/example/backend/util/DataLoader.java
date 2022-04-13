@@ -184,7 +184,7 @@ public class DataLoader implements ApplicationRunner {
         X509Certificate user2Cert = certificateGenerator.generateCertificate(user2Certificate, user1Certificate);
         user2.getCertificates().add(user2Certificate);
         entityRepository.save(user2);
-        keystoreHandler.loadKeyStore(null, "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray());
+        keystoreHandler.loadKeyStore("keystore/FTN.jks", "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray());
         keystoreHandler.write("alias3", user2keyPair.getPrivate(), "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray(), user2Cert);
         keystoreHandler.saveKeyStore("keystore/FTN.jks", "$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW".toCharArray());
 
