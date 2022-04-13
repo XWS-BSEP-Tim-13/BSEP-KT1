@@ -11,5 +11,6 @@ public interface CertificationEntityService {
 
     Set<NewCertificateSubjectDTO> getPossibleSubjectsForNewCertificate();
     List<CertificationEntity> findAllIssuers();
-    List<CertificateIssuerDTO> findIssuersByOrganization(String organization);
+    List<CertificationEntity> findIssuersByOrganization(String organization);
+    List<CertificateIssuerDTO> findSuitableIssuersForCertificateSigning(String organization);
 }

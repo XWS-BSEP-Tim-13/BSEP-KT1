@@ -56,9 +56,13 @@ public class CertificationEntityServiceImpl implements CertificationEntityServic
         return certificationEntityRepository.findAllIssuers(EntityRole.SUBSYSTEM,EntityRole.ADMIN);
     }
 
+    public List<CertificationEntity> findIssuersByOrganization(String organization) {
+        return certificationEntityRepository.findAllIssuersByOrganization(organization);
+    }
+
     @Override
-    public List<CertificateIssuerDTO> findIssuersByOrganization(String organization) {
-        List<CertificationEntity> issuersFromOrganization = findAllIssuers().stream().filter(i -> i.getOrganization().equals(organization) && !i.getCertificates().isEmpty()).collect(Collectors.toList());
+    public List<CertificateIssuerDTO> findSuitableIssuersForCertificateSigning(String organization) {
+        List<CertificationEntity> issuersFromOrganization = findIssuersByOrganization(organization).stream().filter(i -> !i.getCertificates().isEmpty()).collect(Collectors.toList());
         List<CertificateIssuerDTO> ret = new ArrayList<>();
         for(CertificationEntity entity: issuersFromOrganization) {
             ret.add(CertificateIssuerDTO.builder().commonName(entity.getCommonName()).certificates(getCertificatesDto(entity.getCertificates())).id(entity.getId()).email(entity.getEmail()).build());

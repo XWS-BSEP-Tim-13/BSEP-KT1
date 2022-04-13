@@ -29,6 +29,6 @@ public class CertificationEntityController {
 
     @GetMapping("/issuers/{organization}")
     public ResponseEntity<List<CertificateIssuerDTO>> getIssuersByOrganization(@PathVariable("organization") String organization){
-        return new ResponseEntity<>(certificationEntityService.findIssuersByOrganization(organization), HttpStatus.OK);
+        return new ResponseEntity<>(certificationEntityService.findSuitableIssuersForCertificateSigning(organization), HttpStatus.OK);
     }
 }
