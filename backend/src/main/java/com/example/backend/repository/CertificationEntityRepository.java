@@ -18,4 +18,7 @@ public interface CertificationEntityRepository extends JpaRepository<Certificati
 
     @Query("select c from CertificationEntity c where c.entityRole in (?1,?2)")
     List<CertificationEntity> findAllIssuers(EntityRole root,EntityRole subsystem);
+
+    @Query("select c from CertificationEntity c where c.organization = ?1")
+    List<CertificationEntity> findAllIssuersByOrganization(String organization);
 }

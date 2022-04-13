@@ -10,6 +10,8 @@ import classes from './NewCertificate.module.css';
 
 function NewCertificate() {
     const [possibleSubjects, setPossibleSubjects] = useState([]);
+    const [possibleIssuers, setPossibleIssuers] = useState([]);
+    const [possibleIssuersCertificates, setPossibleIssuersCertificates] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState({});
     const [purposes, setPurposes] = useState([]);
 
@@ -18,6 +20,7 @@ function NewCertificate() {
     const navigate = useNavigate();
 
     const subjectEntityId = useRef();
+    const issuerEntityId = useRef();
     const signerCertificateId = useRef();
     const validFrom = useRef();
     const expiringDate = useRef();
@@ -25,8 +28,7 @@ function NewCertificate() {
 
     useEffect(() => {
         console.log(user);
-        console.log(selectedSubject)
-        axios.get(`http://localhost:8081/certificate/subjects`, {
+        axios.get(`http://localhost:8081/certification-entity/subjects`, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -39,9 +41,10 @@ function NewCertificate() {
 
     function addNewCertificateHandler(event) {
         event.preventDefault();
-        
+        console.log(possibleIssuersCertificates);
+
         var newCertificate = {}
-        if(!selectedSubject.rootForOrganizationExists) {
+        if (!selectedSubject.rootForOrganizationExists) {
             newCertificate = {
                 validFrom: validFrom.current.value,
                 expiringDate: expiringDate.current.value,
@@ -74,17 +77,32 @@ function NewCertificate() {
         })
         .catch((error) => {
             console.log(error.data);
-        })
+        });
     }
 
     function subjectSelectedHandler() {
         const selectedSubjectId = subjectEntityId.current.value;
-        const selectedSubjectObject = possibleSubjects.filter((subject) => subject.id == selectedSubjectId)
-        setSelectedSubject(selectedSubjectObject[0])
+        const selectedSubjectObject = possibleSubjects.filter((subject) => subject.id == selectedSubjectId);
+        setSelectedSubject(selectedSubjectObject[0]);
+        console.log(selectedSubject);
 
-        if(selectedSubject.rootForOrganizationExists) {
-            //axios.get(...)
+        if (selectedSubjectObject[0].rootForOrganizationExists) {
+            axios.get(`http://localhost:8081/certification-entity/issuers/${selectedSubjectObject[0].organization}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'Authorization': `Bearer ${user.accessToken}`
+                },
+            }).then((response) => {
+                setPossibleIssuers(response.data);
+            })
         }
+    }
+
+    function issuerSelectedHandler() {
+        const selectedIssuerId = issuerEntityId.current.value;
+        const selectedIssuerObject = possibleIssuers.filter((issuer) => issuer.id == selectedIssuerId);
+        setPossibleIssuersCertificates(selectedIssuerObject[0].certificates);
     }
 
     return (
@@ -99,37 +117,46 @@ function NewCertificate() {
                     <div className={classes.formColumn}>
                         <select name="Subject" defaultValue="" ref={subjectEntityId} onChange={subjectSelectedHandler}>
                             <option value="" disabled>Subject</option>
-                            {   possibleSubjects.map((possibleSubject) => {
-                                    if((user.role !== 'ROLE_ADMIN' && possibleSubject.rootForOrganizationExists && user.organization === possibleSubject.organization && possibleSubject.email !== user.email)
-                                        || user.role === 'ROLE_ADMIN') {
-                                            return <option key={possibleSubject.email} value={possibleSubject.id}>
-                                                {possibleSubject.commonName} ({possibleSubject.email})
-                                            </option>
-                                    } else return null;
-                                }) 
+                            {possibleSubjects.map((possibleSubject) => {
+                                if ((user.role !== 'ROLE_ADMIN' && possibleSubject.rootForOrganizationExists && user.organization === possibleSubject.organization && possibleSubject.email !== user.email)
+                                    || user.role === 'ROLE_ADMIN') {
+                                    return <option key={possibleSubject.email} value={possibleSubject.id}>
+                                        {possibleSubject.commonName} ({possibleSubject.email})
+                                    </option>
+                                } else return null;
+                            })
                             }
                         </select>
 
                         {(user.role === 'ROLE_ADMIN' && selectedSubject.rootForOrganizationExists) ?
-                            <select name="Issuer" defaultValue="">
+                            <select name="Issuer" defaultValue="" ref={issuerEntityId} onChange={issuerSelectedHandler}>
                                 <option value="" disabled>Issuer</option>
-                                <option value="second">Second option</option>
-                                <option value="third">Third option</option>
-                            </select> : null }
+                                {possibleIssuers.map((issuer) => {
+                                    if(issuer.email !== selectedSubject.email) {
+                                        return <option key={issuer.email} value={issuer.id}>
+                                            {issuer.commonName} ({issuer.email})
+                                        </option>;
+                                    } else return null;
+                                })
+                                }
+                            </select> : null}
                         {(user.role === 'ROLE_ADMIN' && !selectedSubject.rootForOrganizationExists) ?
-                            <input type='text' disabled value="Issuer: Admin"/> : null
+                            <input type='text' disabled value="Issuer: Admin" /> : null
                         }
-                        { user.role !== 'ROLE_ADMIN' ?
-                            <input type='text' disabled value={`Issuer: ${user.commonName}`}/> : null
+                        {user.role !== 'ROLE_ADMIN' ?
+                            <input type='text' disabled value={`Issuer: ${user.commonName}`} /> : null
                         }
 
-                        {(!selectedSubject.rootForOrganizationExists) ? 
-                            <input type='text' disabled value="Signer Certificate: 1 (admin)"/> :
-                            <select name="Signer Certificate" defaultValue=""  ref={signerCertificateId}>
+                        {(!selectedSubject.rootForOrganizationExists) ?
+                            <input type='text' disabled value="Signer Certificate: 1 (admin)" /> :
+                            <select name="Signer Certificate" defaultValue="" ref={signerCertificateId}>
                                 <option value="" disabled>Signer Certificate</option>
-                                <option value="first">First option</option>
-                                <option value="second">Second option</option>
-                                <option value="third">Third option</option>
+                                {possibleIssuersCertificates.map((certificate) => {
+                                    return <option key={certificate.id} value={certificate.id}>
+                                        SN {certificate.id} (type: {certificate.certificateType})
+                                    </option>;
+                                    })
+                                }
                             </select>
                         }
 
@@ -141,7 +168,7 @@ function NewCertificate() {
                             </select> : null
                         }
                         {(user.role === 'ROLE_ADMIN' && !selectedSubject.rootForOrganizationExists) ?
-                            <input type='text' disabled value="Certificate Type: Root"/> : null
+                            <input type='text' disabled value="Certificate Type: Root" /> : null
                         }
                         {user.role !== 'ROLE_ADMIN' ?
                             <select name="CertificateType" defaultValue="" ref={certificateType}>
@@ -151,32 +178,32 @@ function NewCertificate() {
                             </select> : null
                         }
 
-                        <input type='text' required placeholder='Valid From' onFocus={(e) => (e.target.type = "date")} onBlur={(e) => (e.target.type = "text")} ref={validFrom}/>
-                        <input type='text' required placeholder='Valid To' onFocus={(e) => (e.target.type = "date")} onBlur={(e) => (e.target.type = "text")} ref={expiringDate}/>
+                        <input type='text' required placeholder='Valid From' onFocus={(e) => (e.target.type = "date")} onBlur={(e) => (e.target.type = "text")} ref={validFrom} />
+                        <input type='text' required placeholder='Valid To' onFocus={(e) => (e.target.type = "date")} onBlur={(e) => (e.target.type = "text")} ref={expiringDate} />
                     </div>
                     <div className={classes.formColumn}>
                         <div className={classes.checkbox}>
-                            <input type='checkbox' id="provesIdentity" onChange={() => setPurposes([...purposes, "Proves the identity to a remote computer"])}/>
+                            <input type='checkbox' id="provesIdentity" onChange={() => setPurposes([...purposes, "Proves the identity to a remote computer"])} />
                             <label htmlFor="provesIdentity">Proves the identity to a remote computer</label>
                         </div>
                         <div className={classes.checkbox}>
-                            <input type='checkbox' id="ensuresIdentity" onChange={() => setPurposes([...purposes, "Ensures the idnetity of a remote computer"])}/>
+                            <input type='checkbox' id="ensuresIdentity" onChange={() => setPurposes([...purposes, "Ensures the idnetity of a remote computer"])} />
                             <label htmlFor="ensuresIdentity">Ensures the idnetity of a remote computer</label>
                         </div>
                         <div className={classes.checkbox}>
-                            <input type='checkbox' id="encryptedData" onChange={() => setPurposes([...purposes, "Allows data on disk to be encrypted"])}/>
+                            <input type='checkbox' id="encryptedData" onChange={() => setPurposes([...purposes, "Allows data on disk to be encrypted"])} />
                             <label htmlFor="encryptedData">Allows data on disk to be encrypted</label>
                         </div>
                         <div className={classes.checkbox}>
-                            <input type='checkbox' id="emailMessages" onChange={() => setPurposes([...purposes, "Protects e-mail messages"])}/>
+                            <input type='checkbox' id="emailMessages" onChange={() => setPurposes([...purposes, "Protects e-mail messages"])} />
                             <label htmlFor="emailMessages">Protects e-mail messages</label>
                         </div>
                         <div className={classes.checkbox}>
-                            <input type='checkbox' id="secureCommunication" onChange={() => setPurposes([...purposes, "Allows secure communication on the Internet"])}/>
+                            <input type='checkbox' id="secureCommunication" onChange={() => setPurposes([...purposes, "Allows secure communication on the Internet"])} />
                             <label htmlFor="secureCommunication">Allows secure communication on the Internet</label>
                         </div>
                         <div className={classes.checkbox}>
-                            <input type='checkbox' id="signData" onChange={() => setPurposes([...purposes, "Allows data to be signed with the current time"])}/>
+                            <input type='checkbox' id="signData" onChange={() => setPurposes([...purposes, "Allows data to be signed with the current time"])} />
                             <label htmlFor="signData">Allows data to be signed with the current time</label>
                         </div>
                     </div>

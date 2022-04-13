@@ -98,11 +98,6 @@ public class CertificateController {
         return new ResponseEntity<>(fetchCertificateService.getAllCertificatesBySubject(id), HttpStatus.OK);
     }
 
-    @GetMapping("/subjects")
-    public ResponseEntity<Set<NewCertificateSubjectDTO>> getPossibleSubjectsForNewCertificate() {
-        Set<NewCertificateSubjectDTO> subjects = certificateService.getPossibleSubjectsForNewCertificate();
-        return new ResponseEntity<>(subjects, HttpStatus.OK);
-    }
     @GetMapping("/hierarchy-above/{id}")
     public ResponseEntity<List<FetchCertificateDTO>> getHierarchyAbove(@PathVariable Integer id){
         return new ResponseEntity<>(fetchCertificateService.getHierarchyAbove(id), HttpStatus.OK);
