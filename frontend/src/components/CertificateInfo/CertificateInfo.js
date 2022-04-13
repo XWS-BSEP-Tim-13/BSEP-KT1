@@ -37,12 +37,11 @@ function CertificateInfo(props) {
     }
 
     useEffect(() => {
-        // ajax poziv za dobavljanje sertifikata po id-ju
         CertificationService.findCertificateById(props.certificateId)
         .then(resp=>{
             setCertificate(resp.data)
         })
-    }, []);
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <div className={classes.modal}>

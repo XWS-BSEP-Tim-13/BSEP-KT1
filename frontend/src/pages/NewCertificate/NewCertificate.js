@@ -36,7 +36,8 @@ function NewCertificate() {
         }).then((response) => {
             setPossibleSubjects(response.data);
         })
-    }, []);
+
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (possibleIssuers.length > 0 && user.role !== 'ROLE_ADMIN') {
@@ -44,7 +45,7 @@ function NewCertificate() {
             const selectedIssuerObject = possibleIssuers.filter((issuer) => issuer.email == selectedIssuerEmail);
             setPossibleIssuersCertificates(selectedIssuerObject[0].certificates);
         }
-    }, [possibleIssuers]);
+    }, [possibleIssuers]) // eslint-disable-line react-hooks/exhaustive-deps
 
     function addNewCertificateHandler(event) {
         event.preventDefault();

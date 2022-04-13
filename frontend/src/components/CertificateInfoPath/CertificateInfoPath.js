@@ -13,7 +13,7 @@ function CertificateInfoPath(props) {
             .then((res) => {
                 setHierarchy(res.data);
             })
-    }, [])
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     function revokeCertificateHandler() {
         props.onRevoke();
