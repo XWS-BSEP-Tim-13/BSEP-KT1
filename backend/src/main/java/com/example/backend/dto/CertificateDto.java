@@ -28,5 +28,5 @@ public class CertificateDto {
     private String signatureHashAlgorithm;
     private String publicKey;
     private CertificateStatus certificateStatus;
-    private CertificateType certificateType;
+    private CertificateType type;
 }
