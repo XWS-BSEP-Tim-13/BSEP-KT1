@@ -128,27 +128,6 @@ public class CertificateServiceImpl implements CertificateService {
         return keystoreHandler.readCertificate(dbCert.getCerFileName(), password, dbCert.getAlias());
     }
 
-    @Override
-    public Set<NewCertificateSubjectDTO> getPossibleSubjectsForNewCertificate() {
-        List<CertificationEntity> allEntities = certificationEntityRepository.findAll();
-        Set<NewCertificateSubjectDTO> possibleSubjects = new HashSet<>();
-        for (CertificationEntity entity : allEntities) {
-            if(!entity.getRole().getName().equals("ROLE_ADMIN")) {
-                boolean rootForOrganizationExists = checkIfRootForOrganizationExists(entity.getOrganization());
-                possibleSubjects.add(new NewCertificateSubjectDTO(entity.getEmail(), entity.getCommonName(), entity.getId(), entity.getOrganization(), rootForOrganizationExists));
-            }
-        }
-        return possibleSubjects;
-    }
-
-    private boolean checkIfRootForOrganizationExists(String organization) {
-        List<Certificate> certificates = certificationRepostory.findAll();
-        for (Certificate certificate : certificates) {
-            if (organization.equals(certificate.getSubject().getOrganization())) return true;
-        }
-        return false;
-    }
-
     private PrivateKey findIssuerPrivateKey(CertificationEntity issuer){
         String keystorePassword = passwordsService.findPasswordByOrganization(issuer.getOrganization());
 

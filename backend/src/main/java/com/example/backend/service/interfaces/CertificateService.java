@@ -22,5 +22,4 @@ public interface CertificateService {
     List<CertificateBasicDto> findAllByType(CertificateType type);
     CertificateDto findCertificateInfo(Integer certificateId);
     Boolean revokeCertificate(Integer id);
-    Set<NewCertificateSubjectDTO> getPossibleSubjectsForNewCertificate();
 }

@@ -10,6 +10,7 @@ import classes from './NewCertificate.module.css';
 
 function NewCertificate() {
     const [possibleSubjects, setPossibleSubjects] = useState([]);
+    const [possibleIssuers, setPossibleIssuers] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState({});
     const [purposes, setPurposes] = useState([]);
 
@@ -25,8 +26,7 @@ function NewCertificate() {
 
     useEffect(() => {
         console.log(user);
-        console.log(selectedSubject)
-        axios.get(`http://localhost:8081/certificate/subjects`, {
+        axios.get(`http://localhost:8081/certification-entity/subjects`, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -79,11 +79,20 @@ function NewCertificate() {
 
     function subjectSelectedHandler() {
         const selectedSubjectId = subjectEntityId.current.value;
-        const selectedSubjectObject = possibleSubjects.filter((subject) => subject.id == selectedSubjectId)
-        setSelectedSubject(selectedSubjectObject[0])
+        const selectedSubjectObject = possibleSubjects.filter((subject) => subject.id == selectedSubjectId);
+        setSelectedSubject(selectedSubjectObject[0]);
+        console.log(selectedSubject);
 
-        if(selectedSubject.rootForOrganizationExists) {
-            //axios.get(...)
+        if(selectedSubjectObject[0].rootForOrganizationExists) {
+            axios.get(`http://localhost:8081/certification-entity/issuers/${selectedSubjectObject[0].organization}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'Authorization': `Bearer ${user.accessToken}`
+                },
+            }).then((response) => {
+                setPossibleIssuers(response.data);
+            })
         }
     }
 
@@ -113,8 +122,12 @@ function NewCertificate() {
                         {(user.role === 'ROLE_ADMIN' && selectedSubject.rootForOrganizationExists) ?
                             <select name="Issuer" defaultValue="">
                                 <option value="" disabled>Issuer</option>
-                                <option value="second">Second option</option>
-                                <option value="third">Third option</option>
+                                {possibleIssuers.map((issuer) => {
+                                    return <option key={issuer.email} value={issuer.id}>
+                                        {issuer.commonName} ({issuer.email})
+                                    </option>;
+                                    })
+                                }
                             </select> : null }
                         {(user.role === 'ROLE_ADMIN' && !selectedSubject.rootForOrganizationExists) ?
                             <input type='text' disabled value="Issuer: Admin"/> : null

@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.dto.CertificateDto;
 import com.example.backend.dto.CertificateIssuerDTO;
+import com.example.backend.dto.NewCertificateSubjectDTO;
 import com.example.backend.enums.CertificateType;
 import com.example.backend.enums.EntityRole;
 import com.example.backend.model.Certificate;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Service;
 
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -28,6 +31,27 @@ public class CertificationEntityServiceImpl implements CertificationEntityServic
     private final ModelMapper modelMapper;
 
     @Override
+    public Set<NewCertificateSubjectDTO> getPossibleSubjectsForNewCertificate() {
+        List<CertificationEntity> allEntities = certificationEntityRepository.findAll();
+        Set<NewCertificateSubjectDTO> possibleSubjects = new HashSet<>();
+        for (CertificationEntity entity : allEntities) {
+            if(!entity.getRole().getName().equals("ROLE_ADMIN")) {
+                boolean rootForOrganizationExists = checkIfRootForOrganizationExists(entity.getOrganization());
+                possibleSubjects.add(new NewCertificateSubjectDTO(entity.getEmail(), entity.getCommonName(), entity.getId(), entity.getOrganization(), rootForOrganizationExists));
+            }
+        }
+        return possibleSubjects;
+    }
+
+    private boolean checkIfRootForOrganizationExists(String organization) {
+        List<Certificate> certificates = certificationRepostory.findAll();
+        for (Certificate certificate : certificates) {
+            if (organization.equals(certificate.getSubject().getOrganization())) return true;
+        }
+        return false;
+    }
+
+    @Override
     public List<CertificationEntity> findAllIssuers() {
         return certificationEntityRepository.findAllIssuers(EntityRole.SUBSYSTEM,EntityRole.ADMIN);
     }
@@ -37,7 +61,7 @@ public class CertificationEntityServiceImpl implements CertificationEntityServic
         List<CertificationEntity> issuersFromOrganization = findAllIssuers().stream().filter(i -> i.getOrganization().equals(organization) && !i.getCertificates().isEmpty()).collect(Collectors.toList());
         List<CertificateIssuerDTO> ret = new ArrayList<>();
         for(CertificationEntity entity: issuersFromOrganization) {
-            ret.add(CertificateIssuerDTO.builder().commonName(entity.getCommonName()).certificates(getCertificatesDto(entity.getCertificates())).email(entity.getEmail()).build());
+            ret.add(CertificateIssuerDTO.builder().commonName(entity.getCommonName()).certificates(getCertificatesDto(entity.getCertificates())).id(entity.getId()).email(entity.getEmail()).build());
         }
         return ret;
     }

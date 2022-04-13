@@ -14,5 +14,6 @@ import java.util.List;
 public class CertificateIssuerDTO {
     private String commonName;
     private String email;
+    private Integer id;
     private List<CertificateDto> certificates;
 }
