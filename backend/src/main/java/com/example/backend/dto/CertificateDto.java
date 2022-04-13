@@ -1,6 +1,7 @@
 package com.example.backend.dto;
 
 import com.example.backend.enums.CertificateStatus;
+import com.example.backend.enums.CertificateType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,4 +28,5 @@ public class CertificateDto {
     private String signatureHashAlgorithm;
     private String publicKey;
     private CertificateStatus certificateStatus;
+    private CertificateType certificateType;
 }
