@@ -107,12 +107,15 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     public CertificateDto findCertificateInfo(Integer certificateId) {
         Certificate cert = certificationRepostory.findById(certificateId).get();
+        String password =passwordsService.findPasswordByOrganization(cert.getSubject().getOrganization());
+        keystoreHandler.loadKeyStore(cert.getCerFileName(), password.toCharArray());
+        X509Certificate x509Certificate = keystoreHandler.readCertificate(cert.getCerFileName(),password,cert.getAlias());
         RSAPublicKey pubKey = (RSAPublicKey) cert.getPublicKey();
         CertificateDto retVal= modelMapper.map(cert,CertificateDto.class);
         retVal.setPublicKey(pubKey.getModulus().toString());
         retVal.setSignatureAlgorithm(pubKey.getAlgorithm());
         retVal.setValitdTo(cert.getExpiringDate());
-
+        retVal.setSignatureHashAlgorithm(x509Certificate.getSigAlgName());
         if(!isCertificateValidByDate(certificateId))
             retVal.setCertificateStatus(CertificateStatus.INVALID);
 

@@ -12,6 +12,7 @@ function CertificateInfoGeneral(props) {
             })
     }
     function getDate(timestamp) {
+        console.log(props.certificate)
         let date = new Date(timestamp);
         if (isNaN(timestamp)) date = new Date()
 
@@ -54,7 +55,7 @@ function CertificateInfoGeneral(props) {
                 <p className={classes.labelBold}>Valid from </p>&ensp;
                 <p className={classes.label}> {getDate(props.certificate.validFrom)} </p>&ensp;
                 <p className={classes.labelBold}>to</p>&ensp;
-                <p className={classes.label}> {getDate(props.certificate.validTo)} </p>
+                <p className={classes.label}> {getDate(props.certificate.valitdTo)} </p>
             </div>
             <div className={classes.download}>
                 <FontAwesomeIcon icon={faDownload} className={classes.downloadIcon} onClick={downloadCertificate} />

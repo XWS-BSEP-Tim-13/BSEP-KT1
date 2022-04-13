@@ -173,7 +173,9 @@ public class DataLoader implements ApplicationRunner {
         X509Certificate user1Cert = certificateGenerator.generateCertificate(user1Certificate, adminCertificate);
 
         user1.getCertificates().add(user1Certificate);
-        keystorePasswordsService.saveOrganizationPassword(OrganizationKeystoreAccess.builder().organiation(user1.getOrganization()).password("$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW").build());
+        if(keystorePasswordsService.findPasswordByOrganization(user1.getOrganization()).equals("")) {
+            keystorePasswordsService.saveOrganizationPassword(OrganizationKeystoreAccess.builder().organiation(user1.getOrganization()).password("$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW").build());
+        }
         user1 = entityRepository.save(user1);
         user1Certificate = user1.getCertificates().get(0);
         user1Certificate.setPrivateKey(user1keyPair.getPrivate());

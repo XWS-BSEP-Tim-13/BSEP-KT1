@@ -49,7 +49,7 @@ function CertificateInfoDetails(props) {
                     <button className={selectedField === 'validFrom' ? classes.fieldSelected : classes.field}
                         onClick={() => selectFieldHandler('validFrom',getDate(props.certificate.validFrom))} >Valid From</button>
                     <button className={selectedField === 'validTo' ? classes.fieldSelected : classes.field}
-                        onClick={() => selectFieldHandler('validTo', getDate(props.certificate.validTo))} >Valid To</button>
+                        onClick={() => selectFieldHandler('validTo', getDate(props.certificate.valitdTo))} >Valid To</button>
                 </div>
             </div>
             <p className={classes.labelBold}>Value:</p>
