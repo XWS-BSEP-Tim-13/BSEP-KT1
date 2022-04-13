@@ -39,6 +39,15 @@ function NewCertificate() {
         })
     }, []);
 
+    useEffect(() => {
+        console.log(possibleIssuers);
+        if (possibleIssuers.length > 0 && user.role !== 'ROLE_ADMIN') {
+            const selectedIssuerEmail = user.email;
+            const selectedIssuerObject = possibleIssuers.filter((issuer) => issuer.email == selectedIssuerEmail);
+            setPossibleIssuersCertificates(selectedIssuerObject[0].certificates);
+        }
+    }, [possibleIssuers]);
+
     function addNewCertificateHandler(event) {
         event.preventDefault();
         console.log(possibleIssuersCertificates);
@@ -147,7 +156,7 @@ function NewCertificate() {
                             <input type='text' disabled value={`Issuer: ${user.commonName}`} /> : null
                         }
 
-                        {(!selectedSubject.rootForOrganizationExists) ?
+                        {(!selectedSubject.rootForOrganizationExists && user.role === 'ROLE_ADMIN') ?
                             <input type='text' disabled value="Signer Certificate: 1 (admin)" /> :
                             <select name="Signer Certificate" defaultValue="" ref={signerCertificateId}>
                                 <option value="" disabled>Signer Certificate</option>
