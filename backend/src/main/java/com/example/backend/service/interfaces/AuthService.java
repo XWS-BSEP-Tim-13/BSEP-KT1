@@ -5,4 +5,6 @@ import com.example.backend.model.CertificationEntity;
 
 public interface AuthService {
     CertificationEntity registerCertificationEntity(RegistrationEntityDTO registrationEntity);
+
+    void activateAccount(String code);
 }

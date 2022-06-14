@@ -45,6 +45,25 @@ public class AuthServiceImpl implements AuthService {
         return certificationEntity;
     }
 
+    @Override
+    @Transactional
+    public void activateAccount(String code) {
+        VerificationData verificationData = verificationDataRepository.findByCode(code);
+
+        if(verificationData == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot find account with this activation code.");
+        if(verificationData.isCodeUsed()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This code has already been used.");
+        if(verificationData.getExpiresAt().after(new Date())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This code is expired.");
+
+        CertificationEntity certificationEntity = certificationEntityRepository.findByEmail(verificationData.getEmail());
+        if(certificationEntity == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "There is no user with this email.");
+
+        certificationEntity.setActive(true);
+        certificationEntityRepository.save(certificationEntity);
+
+        verificationData.setCodeUsed(true);
+        verificationDataRepository.save(verificationData);
+    }
+
     private VerificationData saveVerificationData(String email) {
         VerificationData verificationData = new VerificationData(
                 UUID.randomUUID().toString(),

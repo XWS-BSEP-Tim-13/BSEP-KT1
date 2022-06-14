@@ -58,4 +58,10 @@ public class AuthController {
         CertificationEntity entity = authService.registerCertificationEntity(registrationEntity);
         return new ResponseEntity<>(entity, HttpStatus.CREATED);
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> activateAccount(@RequestBody String code) {
+        authService.activateAccount(code);
+        return new ResponseEntity<>("Account successfully activated!", HttpStatus.OK);
+    }
 }
