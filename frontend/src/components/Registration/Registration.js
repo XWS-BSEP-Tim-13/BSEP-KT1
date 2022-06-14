@@ -1,26 +1,22 @@
-import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
-import { useDispatch } from "react-redux";
-import { login } from "../../features/user"
 import axios from 'axios';
-
 import RegistrationService from "../../services/RegistrationService";
-import AuthentificationService from "../../services/AuthentificationService";
+import { useForm } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import schema from '../../validationSchemas/RegisterValidationSchema';
 
 import classes from './Registration.module.css';
 
 function Registration(props) {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const [countries, setCountries] = useState([]);
 
-    const commonNameInputRef = useRef();
-    const emailInputRef = useRef();
-    const organizationInputRef = useRef();
-    const organizationUnitInputRef = useRef();
-    const countryCodeInputRef = useRef();
-    const passwordInputRef = useRef();
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(schema)
+    });
+
+    const [serverError, setServerError] = useState(false);
+
     const isSubsystemInputRef = useRef();
 
     useEffect(() => {
@@ -30,16 +26,15 @@ function Registration(props) {
             })
     }, [])
 
-    function registrationHandler(event) {
-        event.preventDefault();
+    function submitHandler(data) {
 
         const registrationEntityDTO = {
-            commonName: commonNameInputRef.current.value,
-            email: emailInputRef.current.value,
-            organization: organizationInputRef.current.value,
-            organizationUnit: organizationUnitInputRef.current.value,
-            countryCode: countryCodeInputRef.current.value,
-            password: passwordInputRef.current.value,
+            commonName: data.commonName,
+            email: data.email,
+            organization: data.organization,
+            organizationUnit: data.organizationUnit,
+            countryCode: data.countryCode,
+            password: data.password,
             role: ''
         }
 
@@ -52,48 +47,59 @@ function Registration(props) {
 
         RegistrationService.register(registrationEntityDTO)
         .then(() => {
-            AuthentificationService.login({
-                email: registrationEntityDTO.email,
-                password: registrationEntityDTO.password
-            })
-            .then((response) => {
-                dispatch(login(response.data));
-                navigate('/home');
-            })
+            props.navigateToLinkSent();
         })
-        .catch(() => {
-            console.log("Server error.")
+        .catch((error) => {
+            if (error.response.data.includes("Email already exists!")) {
+                setServerError(true);
+            }
         })
     }
 
     return (
         <div className={classes.login}>
             <h1>Register now!</h1>
-            <form onSubmit={registrationHandler} className={classes.form}>
+            <form onSubmit={handleSubmit(submitHandler)} className={classes.form}>
 
                 <div className={classes.formItem}>
-                    <input type='text' required placeholder='Common name' ref={commonNameInputRef}/>
+                    <input type='text' placeholder='Common name' {...register("commonName")}/>
                 </div>
-                <div className={classes.formItem}>
-                    <input type='text' required placeholder='Email' ref={emailInputRef}/>
-                </div>
-                <div className={classes.formItem}>
-                    <input type='text' required placeholder='Organization' ref={organizationInputRef}/>
-                </div>
-                <div className={classes.formItem}>
-                    <input type='text' required placeholder='Organization Unit' ref={organizationUnitInputRef}/>
-                </div>
+                <div className={classes.errorMessage}>{errors.commonName?.message}</div>
 
-                <select name="CountryCode" defaultValue="" className={classes.select} ref={countryCodeInputRef}>
+                <div className={classes.formItem}>
+                    <input type='text' placeholder='Email' {...register("email")}/>
+                </div>
+                <div className={classes.errorMessage}>{errors.email?.message}</div>
+
+                <div className={classes.formItem}>
+                    <input type='text' placeholder='Organization' {...register("organization")}/>
+                </div>
+                <div className={classes.errorMessage}>{errors.organization?.message}</div>
+
+                <div className={classes.formItem}>
+                    <input type='text' placeholder='Organization Unit' {...register("organizationUnit")}/>
+                </div>
+                <div className={classes.errorMessage}>{errors.organizationUnit?.message}</div>
+
+                <select name="CountryCode" defaultValue="" className={classes.select} {...register("countryCode")} >
                     <option value="" disabled>Country Code</option>
                     { countries.map((country) => {
                         return <option key={country.id} value={country.iso2Code} >{country.iso2Code} ({country.name})</option>;
                     })}
                 </select>
+                <div className={classes.errorMessage}>{errors.countryCode?.message}</div>
+
+                <div className={`${classes.formItem} ${classes.password}`}>
+                    <input type='password' placeholder='Password' {...register("password")}/>
+                    <div className={classes.tooltip}>Strong password must be at least 10 characters long, including at least 1 uppercase letter, 1 lowercase letter, 1 numeric character and 1 special character.</div>
+                </div>
+                <div className={classes.errorMessage}>{errors.password?.message}</div>
 
                 <div className={classes.formItem}>
-                    <input type='password' required placeholder='Password' ref={passwordInputRef}/>
+                    <input type='password' placeholder='Confirm Password' {...register("confirmPassword")}/>
                 </div>
+                <div className={classes.errorMessage}>{errors.confirmPassword?.message}</div>
+
                 <div className={classes.formItem}>
                     <div className={classes.checkbox}>
                         <input type='checkbox' id="isSubsystem" ref={isSubsystemInputRef}/>
@@ -102,7 +108,8 @@ function Registration(props) {
                 </div>
 
                 <button className={classes.buttonLogIn}>Register</button>
-                <a href="/#" className={classes.registerLink} onClick={() => props.changePage(true)}>
+
+                <a href="/#" className={classes.registerLink} onClick={() => props.navigateToLogin()}>
                     Already have an account? Log in here!
                 </a>
             </form>

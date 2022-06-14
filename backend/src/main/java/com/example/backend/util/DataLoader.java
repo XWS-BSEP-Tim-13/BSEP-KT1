@@ -65,6 +65,7 @@ public class DataLoader implements ApplicationRunner {
                 .organizationUnit("Katedra za automatiku")
                 .certificates(new ArrayList<>())
                 .role(adminRole)
+                .isActive(true)
                 .build();
         admin.setId(1);
 
@@ -78,6 +79,7 @@ public class DataLoader implements ApplicationRunner {
                 .organizationUnit("Katedra za informatiku")
                 .certificates(new ArrayList<>())
                 .role(userRole)
+                .isActive(true)
                 .build();
         user1.setId(2);
 
@@ -91,6 +93,7 @@ public class DataLoader implements ApplicationRunner {
                 .organizationUnit("Katedra za racunarstvo")
                 .certificates(new ArrayList<>())
                 .role(userRole)
+                .isActive(true)
                 .build();
         user2.setId(3);
 
@@ -104,6 +107,7 @@ public class DataLoader implements ApplicationRunner {
                 .organizationUnit("Katedra za matematiku")
                 .certificates(new ArrayList<>())
                 .role(subsystemRole)
+                .isActive(true)
                 .build();
         user3.setId(4);
 

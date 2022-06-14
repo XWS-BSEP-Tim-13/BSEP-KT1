@@ -45,7 +45,7 @@ function Login(props) {
                 <p className={classes.errorMessage}>{loginError}</p>
 
                 <button className={classes.buttonLogIn}>Log in</button>
-                <a href="/#" className={classes.registerLink} onClick={() => props.changePage(false)} >
+                <a href="/#" className={classes.registerLink} onClick={() => props.navigateToRegister()} >
                     Don't have an account? Register here.
                 </a>
             </form>

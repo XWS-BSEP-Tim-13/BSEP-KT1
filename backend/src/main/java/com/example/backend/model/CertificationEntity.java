@@ -43,6 +43,8 @@ public class CertificationEntity extends BaseEntity implements UserDetails {
 
     private String countryCode;
 
+    private boolean isActive = false;
+
     private EntityRole entityRole;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
