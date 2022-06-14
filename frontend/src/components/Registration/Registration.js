@@ -107,6 +107,8 @@ function Registration(props) {
                     </div>
                 </div>
 
+                <div className={classes.errorMessage}>{serverError ? "User with this email already exists!" : null}</div>
+
                 <button className={classes.buttonLogIn}>Register</button>
 
                 <a href="/#" className={classes.registerLink} onClick={() => props.navigateToLogin()}>
