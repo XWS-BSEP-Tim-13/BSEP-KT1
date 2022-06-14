@@ -10,9 +10,11 @@ import com.example.backend.repository.ForgotPasswordTokenRepository;
 import com.example.backend.repository.RoleRepository;
 import com.example.backend.repository.VerificationDataRepository;
 import com.example.backend.service.interfaces.AuthService;
+import com.example.backend.service.interfaces.EmailService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +33,7 @@ public class AuthServiceImpl implements AuthService {
     private final RoleRepository roleRepository;
     private final ForgotPasswordTokenRepository forgotPasswordTokenRepository;
     private final VerificationDataRepository verificationDataRepository;
+    private final EmailService emailService;
 
     @Override
     @Transactional
@@ -62,12 +65,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void activateAccount(String code) {
+    public String activateAccount(String code) {
         VerificationData verificationData = verificationDataRepository.findByCode(code);
 
-        if(verificationData == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot find account with this activation code.");
-        if(verificationData.isCodeUsed()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This code has already been used.");
-        if(verificationData.getExpiresAt().after(new Date())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This code is expired.");
+        if(verificationData == null) return  "Cannot find account with this activation code.";
+        if(verificationData.isCodeUsed()) return  "This code has already been used.";
+        if(verificationData.getExpiresAt().before(new Date())) return  "This code is expired.";
 
         CertificationEntity certificationEntity = certificationEntityRepository.findByEmail(verificationData.getEmail());
         if(certificationEntity == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "There is no user with this email.");
@@ -77,6 +80,8 @@ public class AuthServiceImpl implements AuthService {
 
         verificationData.setCodeUsed(true);
         verificationDataRepository.save(verificationData);
+
+        return "Account successfully activated!";
     }
 
     private VerificationData saveVerificationData(String email) {
@@ -93,6 +98,11 @@ public class AuthServiceImpl implements AuthService {
 
 
     private void sendVerificationEmail(VerificationData verificationData) {
-
+        emailService.sendSimpleMessage(
+                verificationData.getEmail(),
+                "Subject: PKI Account Activation\r\n",
+                        "Please click on link to activate your account: " +
+                        "http://localhost:8081/auth/activate/" + verificationData.getCode()
+        );
     }
 }

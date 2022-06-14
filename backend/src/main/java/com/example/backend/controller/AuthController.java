@@ -68,10 +68,10 @@ public class AuthController {
         return new ResponseEntity<>(entity, HttpStatus.CREATED);
     }
 
-    @PostMapping("/activate")
-    public ResponseEntity<String> activateAccount(@RequestBody String code) {
-        authService.activateAccount(code);
-        return new ResponseEntity<>("Account successfully activated!", HttpStatus.OK);
+    @GetMapping("/activate/{code}")
+    public ResponseEntity<String> activateAccount(@PathVariable String code) {
+        String message = authService.activateAccount(code);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @GetMapping("forgot-password/mail/{email}")

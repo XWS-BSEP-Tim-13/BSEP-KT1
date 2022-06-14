@@ -7,5 +7,5 @@ import com.example.backend.model.CertificationEntity;
 public interface AuthService {
     CertificationEntity registerCertificationEntity(RegistrationEntityDTO registrationEntity);
     void changePassword(ChangePasswordDto dto) throws Exception;
-    void activateAccount(String code);
+    String activateAccount(String code);
 }

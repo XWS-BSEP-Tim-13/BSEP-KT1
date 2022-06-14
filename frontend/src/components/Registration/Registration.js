@@ -50,7 +50,7 @@ function Registration(props) {
             props.navigateToLinkSent();
         })
         .catch((error) => {
-            if (error.response.data.includes("Email already exists!")) {
+            if (error.response.data.message.includes("User with this email already exists")) {
                 setServerError(true);
             }
         })
