@@ -43,13 +43,12 @@ function Login(props) {
                     <input type="password" required placeholder="Password" />
                 </div>
                 <p className={classes.errorMessage}>{loginError}</p>
-                <div>
-                <a href="/#" className={classes.registerLink} onClick={() => props.changePageToForgotPassword()} >
+                
+                <a href="/#" className={classes.registerLink} onClick={() => props.navigateToForgotPasswordPage()} >
                     Forgot password?
                 </a>
-                </div>
                 <button className={classes.buttonLogIn}>Log in</button>
-                <a href="/#" className={classes.registerLink} onClick={() => props.changePageToRegistration()} >
+                <a href="/#" className={classes.registerLink} onClick={() => props.navigateToRegister()} >
                     Don't have an account? Register here.
                 </a>
             </form>

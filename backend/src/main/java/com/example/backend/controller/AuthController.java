@@ -62,11 +62,16 @@ public class AuthController {
         return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, user.getEmail(), user.getCommonName(), user.getRole().getAuthority(), user.getOrganization()));
     }
 
-
     @PostMapping("/register")
     public ResponseEntity<CertificationEntity> registerCertificationEntity(@RequestBody RegistrationEntityDTO registrationEntity){
         CertificationEntity entity = authService.registerCertificationEntity(registrationEntity);
         return new ResponseEntity<>(entity, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/activate")
+    public ResponseEntity<String> activateAccount(@RequestBody String code) {
+        authService.activateAccount(code);
+        return new ResponseEntity<>("Account successfully activated!", HttpStatus.OK);
     }
 
     @GetMapping("forgot-password/mail/{email}")
@@ -101,7 +106,7 @@ public class AuthController {
     }
 
     @PutMapping("/change-password")
-    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordDto dto){
+    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordDto dto) {
         try {
             authService.changePassword(dto);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -109,4 +114,5 @@ public class AuthController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password and confirm password do not match.");
         }
     }
+
 }
