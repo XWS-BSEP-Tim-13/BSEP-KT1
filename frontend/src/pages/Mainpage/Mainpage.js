@@ -6,18 +6,21 @@ import ConfirmationEmailSent from "../../components/ConfirmationEmailSent/Confir
 import classes from './Mainpage.module.css';
 
 import { useState } from 'react';
+import Passwordless from "../../components/Login/Passwordless/Passwordless";
 
 function Mainpage() {
     const [isLoginPage, setIsLoginPage] = useState(true);
     const [isRegisterPage, setIsRegisterPage] =useState(false)
     const [isForgotPasswordPage,setIsForgotPasswordPage]= useState(false)
     const [isLinkSentPage, setIsLinkSentPage] = useState(false);
+    const [isPasswordlessPage, setIsPasswordlessPage] = useState(false);
 
     function navigateToLogin() {
         setIsLoginPage(true);
         setIsRegisterPage(false);
         setIsForgotPasswordPage(false);
         setIsLinkSentPage(false);
+        setIsPasswordlessPage(false);
     }
 
     function navigateToRegister() {
@@ -25,6 +28,8 @@ function Mainpage() {
         setIsRegisterPage(true);
         setIsForgotPasswordPage(false);
         setIsLinkSentPage(false);
+        setIsPasswordlessPage(false);
+        setIsPasswordlessPage(false);
     }
 
     function navigateToLinkSent() {
@@ -32,6 +37,7 @@ function Mainpage() {
         setIsRegisterPage(false);
         setIsForgotPasswordPage(false);
         setIsLinkSentPage(true);
+        setIsPasswordlessPage(false);
     }
 
     function navigateToForgotPasswordPage(){
@@ -41,12 +47,21 @@ function Mainpage() {
         setIsLinkSentPage(false);
     }
 
+    function navigateToPasswordless() {
+        setIsLoginPage(false);
+        setIsRegisterPage(false);
+        setIsForgotPasswordPage(false);
+        setIsLinkSentPage(false);
+        setIsPasswordlessPage(true);
+    }
+
     return (
         <div className={classes.page}>
-            { isLoginPage ? <Login navigateToRegister={navigateToRegister} navigateToForgotPasswordPage={navigateToForgotPasswordPage}/> : null }
+            { isLoginPage ? <Login navigateToRegister={navigateToRegister} navigateToForgotPasswordPage={navigateToForgotPasswordPage} navigateToPasswordless={navigateToPasswordless}/> : null }
             { isRegisterPage ? <Registration navigateToLogin={navigateToLogin} navigateToLinkSent={navigateToLinkSent} /> : null}
             { isForgotPasswordPage ? <ForgotPassword changePage={navigateToLogin} /> : null}
             { isLinkSentPage ? <ConfirmationEmailSent navigateToLogin={navigateToLogin} navigateToRegister={navigateToRegister} /> : null}
+            {isPasswordlessPage ? <Passwordless navigateToLogin={navigateToLogin} /> : null}
             <div className={classes.image}></div>
         </div>
     );

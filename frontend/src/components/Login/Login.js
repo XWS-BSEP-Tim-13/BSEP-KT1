@@ -48,6 +48,9 @@ function Login(props) {
                     Forgot password?
                 </a>
                 <button className={classes.buttonLogIn}>Log in</button>
+                <p className={classes.or}> or </p>
+                <div className={classes.line}> </div>
+                <button className={classes.buttonLogInViaEmail} onClick={() => props.navigateToPasswordless(true)}>Log in via email</button>
                 <a href="/#" className={classes.registerLink} onClick={() => props.navigateToRegister()} >
                     Don't have an account? Register here.
                 </a>

@@ -86,7 +86,7 @@ public class DataLoader implements ApplicationRunner {
         CertificationEntity user2 = CertificationEntity.builder()
                 .commonName("User Two")
                 .countryCode("RS")
-                .email("u2@u.com")
+                .email("srdjansukovic@gmail.com")
                 .organization("FTN")
                 .entityRole(EntityRole.USER)
                 .password("$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW")

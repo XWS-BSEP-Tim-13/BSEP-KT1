@@ -1,9 +1,6 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.ChangePasswordDto;
-import com.example.backend.dto.JwtAuthenticationRequest;
-import com.example.backend.dto.RegistrationEntityDTO;
-import com.example.backend.dto.UserTokenState;
+import com.example.backend.dto.*;
 import com.example.backend.model.CertificationEntity;
 import com.example.backend.service.interfaces.AuthService;
 import com.example.backend.service.interfaces.ForgotPasswordTokenService;
@@ -115,4 +112,37 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/generate-passwordless")
+    public ResponseEntity<String> generatePasswordlessCode(@RequestBody PasswordlessCodeRequestDto codeRequest) {
+        try{
+            authService.generatePasswordlessCode(codeRequest);
+        }
+        catch (ResponseStatusException e){
+            return new ResponseEntity<>("Certification entity with provided email does not exist.", HttpStatus.BAD_REQUEST);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("Code successfully generated!", HttpStatus.OK);
+    }
+
+//    @PostMapping("/passwordless-login")
+//    public ResponseEntity<UserTokenState> passwordlessLogin(@RequestBody JwtAuthenticationRequest authenticationRequest) {
+//        Authentication authentication = null;
+//        try {
+//            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+//                    authenticationRequest.getEmail(), authenticationRequest.getPassword()));
+//        } catch (DisabledException disabledException) {
+//            return new ResponseEntity("User not enabled!", HttpStatus.BAD_REQUEST);
+//        } catch (Exception ex) {
+//            return new ResponseEntity("Wrong email or password!", HttpStatus.BAD_REQUEST);
+//        }
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        CertificationEntity user = (CertificationEntity) authentication.getPrincipal();
+//        String jwt = tokenUtils.generateToken(user.getEmail());
+//        int expiresIn = tokenUtils.getExpiredIn();
+//        return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, user.getEmail(), user.getCommonName(), user.getRole().getAuthority(), user.getOrganization()));
+//    }
 }

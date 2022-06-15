@@ -1,24 +1,34 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.ChangePasswordDto;
+import com.example.backend.dto.PasswordlessCodeRequestDto;
+import com.example.backend.dto.PasswordlessLoginRequestDto;
 import com.example.backend.dto.RegistrationEntityDTO;
+import com.example.backend.email_feedback.Mail;
 import com.example.backend.model.CertificationEntity;
 import com.example.backend.model.ForgotPasswordToken;
+import com.example.backend.model.PasswordlessCredentials;
 import com.example.backend.model.VerificationData;
-import com.example.backend.repository.CertificationEntityRepository;
-import com.example.backend.repository.ForgotPasswordTokenRepository;
-import com.example.backend.repository.RoleRepository;
-import com.example.backend.repository.VerificationDataRepository;
+import com.example.backend.repository.*;
 import com.example.backend.service.interfaces.AuthService;
+import com.example.backend.service.interfaces.MailService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -31,6 +41,8 @@ public class AuthServiceImpl implements AuthService {
     private final RoleRepository roleRepository;
     private final ForgotPasswordTokenRepository forgotPasswordTokenRepository;
     private final VerificationDataRepository verificationDataRepository;
+    private final PasswordlessCredentialsRepository passwordlessCredentialsRepository;
+    private final MailService mailService;
 
     @Override
     @Transactional
@@ -91,6 +103,54 @@ public class AuthServiceImpl implements AuthService {
         return verificationData;
     }
 
+    public void generatePasswordlessCode(PasswordlessCodeRequestDto codeRequestDto) throws MessagingException, UnsupportedEncodingException {
+        CertificationEntity entity = certificationEntityRepository.findByEmail(codeRequestDto.getEmail());
+        if(entity == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot find account with this email.");
+        }
+
+        String code = getRandomNumberString();
+        Date expiringDate = getTime15MinutesAfter(Calendar.getInstance());
+
+        PasswordlessCredentials credentialsDb = passwordlessCredentialsRepository.findByEmail(codeRequestDto.getEmail());
+
+        if(credentialsDb == null){
+            PasswordlessCredentials credentials = PasswordlessCredentials.builder()
+                    .code(code)
+                    .email(codeRequestDto.getEmail())
+                    .expiringDate(expiringDate)
+                    .build();
+            passwordlessCredentialsRepository.save(credentials);
+
+            mailService.sendPasswordlessCode(credentials);
+        }
+        else {
+            credentialsDb.setCode(code);
+            credentialsDb.setExpiringDate(expiringDate);
+            passwordlessCredentialsRepository.save(credentialsDb);
+
+            mailService.sendPasswordlessCode(credentialsDb);
+        }
+
+
+    }
+
+    @Override
+    public void passwordlessLogin(PasswordlessLoginRequestDto loginRequestDto) {
+        CertificationEntity entity = certificationEntityRepository.findByEmail(loginRequestDto.getEmail());
+
+    }
+
+    private String getRandomNumberString() {
+        Random rnd = new Random();
+        int number = rnd.nextInt(999999);
+        return String.format("%06d", number);
+    }
+
+    private Date getTime15MinutesAfter(Calendar currentTime) {
+        long timeInMillis = currentTime.getTimeInMillis();
+        return new Date(timeInMillis + (15 * 60 * 1000));
+    }
 
     private void sendVerificationEmail(VerificationData verificationData) {
 
