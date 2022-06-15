@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <property name="LOGS_HOME" value="./logs/" />
+    <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS_HOME}pki-info.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_HOME}pki-info_%d{yyyyMMdd}-%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>1</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%level{5}] %date{ISO8601} | %message%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS_HOME}pki-error.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_HOME}pki-error_%d{yyyyMMdd}-%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>1</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%level{5}] %date{ISO8601} | %message%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="FILE_WARNING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS_HOME}pki-warning.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/pki-warning_%d{yyyyMMdd}-%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>1</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%level{5}] %date{ISO8601} | %message%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="pki-info" level="INFO" additivity="false">
+        <appender-ref ref="FILE_INFO"/>
+    </logger>
+    <logger name="pki-error" level="ERROR" additivity="false">
+        <appender-ref ref="FILE_ERROR"/>
+    </logger>
+    <logger name="pki-warning" level="WARNING" additivity="false">
+        <appender-ref ref="FILE_WARNING"/>
+    </logger>
+</configuration>
