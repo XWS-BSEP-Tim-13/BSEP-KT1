@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Set;
 
+import static com.example.backend.BackendApplication.LOGGER_INFO;
+
 @RestController
 @RequestMapping("/certification-entity")
 @AllArgsConstructor
@@ -26,12 +28,14 @@ public class CertificationEntityController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER', 'ROLE_SUBSYSTEM')")
     public ResponseEntity<Set<NewCertificateSubjectDTO>> getPossibleSubjectsForNewCertificate() {
         Set<NewCertificateSubjectDTO> subjects = certificationEntityService.getPossibleSubjectsForNewCertificate();
+        LOGGER_INFO.info("Action: GPI");
         return new ResponseEntity<>(subjects, HttpStatus.OK);
     }
 
     @GetMapping("/issuers/{organization}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER', 'ROLE_SUBSYSTEM')")
     public ResponseEntity<List<CertificateIssuerDTO>> getIssuersByOrganization(@PathVariable("organization") String organization){
+        LOGGER_INFO.info("User: " + organization + " | Action: I/:org");
         return new ResponseEntity<>(certificationEntityService.findSuitableIssuersForCertificateSigning(organization), HttpStatus.OK);
     }
 }

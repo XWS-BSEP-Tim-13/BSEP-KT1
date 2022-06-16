@@ -24,6 +24,9 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.security.Principal;
+
+import static com.example.backend.BackendApplication.*;
 
 @RestController
 @RequestMapping("auth")
@@ -51,9 +54,11 @@ public class AuthController {
                     authenticationRequest.getEmail(), authenticationRequest.getPassword()));
         }
         catch (DisabledException disabledException){
+            LOGGER_ERROR.error("User: " + authenticationRequest.getEmail() + " | Action: L");
             return new ResponseEntity("User not enabled!",HttpStatus.BAD_REQUEST);
         }
         catch (Exception ex){
+            LOGGER_WARNING.warn("User: " + authenticationRequest.getEmail() + " | Action: L");
             return new ResponseEntity("Wrong email or password!",HttpStatus.BAD_REQUEST);
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -61,12 +66,14 @@ public class AuthController {
         CertificationEntity user = (CertificationEntity) authentication.getPrincipal();
         String jwt = tokenUtils.generateToken(user.getEmail());
         int expiresIn = tokenUtils.getExpiredIn();
+        LOGGER_INFO.info("User: " + authenticationRequest.getEmail() + " | Action: L");
         return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, user.getEmail(), user.getCommonName(), user.getRole().getAuthority(), user.getOrganization()));
     }
 
     @PostMapping("/register")
     public ResponseEntity<CertificationEntity> registerCertificationEntity(@RequestBody RegistrationEntityDTO registrationEntity){
         CertificationEntity entity = authService.registerCertificationEntity(registrationEntity);
+        LOGGER_INFO.info("User: " + registrationEntity.getEmail() + " | Action: RCE");
         return new ResponseEntity<>(entity, HttpStatus.CREATED);
     }
 
@@ -80,12 +87,16 @@ public class AuthController {
     public ResponseEntity<Integer> forgotPassword(@PathVariable String email){
             try{
                 Integer id=forgotPasswordTokenService.generateToken(email);
+                LOGGER_INFO.info("User: " + email + " | Action: FP");
                 return new ResponseEntity<>(id,HttpStatus.OK);
             }catch (EntityNotFoundException e){
+                LOGGER_ERROR.error("User: " + email + " | Action: FP");
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email not found.");
             } catch (MessagingException e) {
+                LOGGER_ERROR.error("User: " + email + " | Action: FP");
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error while sending email!");
             } catch (UnsupportedEncodingException e) {
+                LOGGER_ERROR.error("User: " + email + " | Action: FP");
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error while sending email!");
             }
     }
@@ -97,6 +108,7 @@ public class AuthController {
             URI frontend = new URI("http://localhost:3000/change-password/"+token);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setLocation(frontend);
+            LOGGER_INFO.info("User: " + email + " | Action: FP");
             return new ResponseEntity<>(httpHeaders, HttpStatus.TEMPORARY_REDIRECT);
         }
         catch (EntityNotFoundException e){
@@ -108,11 +120,13 @@ public class AuthController {
     }
 
     @PutMapping("/change-password")
-    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordDto dto) {
+    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordDto dto, Principal principal) {
         try {
             authService.changePassword(dto);
+            LOGGER_INFO.info("User: " + principal.getName() + " | Action: CP");
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
+            LOGGER_ERROR.error("User: " + principal.getName() + " | Action: CP");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password and confirm password do not match.");
         }
     }
@@ -136,12 +150,14 @@ public class AuthController {
     public ResponseEntity<UserTokenState> passwordlessLogin(@RequestBody PasswordlessLoginRequestDto loginRequestDto) {
 
         if(!authService.canUserLogInPasswordlessly(loginRequestDto)){
+            LOGGER_ERROR.error("User: " + loginRequestDto.getEmail() + " | Action: PL");
             return new ResponseEntity("Wrong email or code!", HttpStatus.BAD_REQUEST);
         }
 
         CertificationEntity user = authService.findByEmail(loginRequestDto.getEmail());
         String jwt = tokenUtils.generateToken(user.getEmail());
         int expiresIn = tokenUtils.getExpiredIn();
+        LOGGER_INFO.info("User: " + user.getEmail() + " | Action: PL");
         return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, user.getEmail(), user.getCommonName(), user.getRole().getAuthority(), user.getOrganization()));
     }
 }

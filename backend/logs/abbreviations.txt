@@ -1,0 +1,18 @@
+L	->	login
+RCE	->	register certification entity
+AA	->	activate account
+FP	->	forgot password
+CP	->	change password
+PL	->	passwordless login
+CC	->	create certificate
+c/:type ->	get certificates by type
+c/:id	->	get certificate by id
+DC	->	download certificate
+RC	->	revoke certificate
+GC	->	get all certificates
+c/:org	->	get certificates by organization
+c/:subj	->	get certificates by subject
+HaC	-> 	get hierarchy above certificate
+iCR/:id ->	is certificate revoked
+GPI	->	get possible issuers for signing new certificate
+I/:org  ->	get issuers by organization
