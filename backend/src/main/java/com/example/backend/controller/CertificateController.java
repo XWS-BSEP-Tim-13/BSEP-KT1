@@ -4,7 +4,6 @@ import com.example.backend.dto.*;
 import com.example.backend.enums.CertificateType;
 import com.example.backend.model.Certificate;
 import com.example.backend.dto.FetchCertificateDTO;
-import com.example.backend.dto.NewCertificateSubjectDTO;
 import com.example.backend.service.interfaces.CertificateService;
 import com.example.backend.service.interfaces.FetchCertificateService;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,6 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.bouncycastle.openssl.PEMWriter;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +19,6 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 
 import java.util.List;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/certificate")
@@ -36,22 +31,26 @@ public class CertificateController {
 
 
     @PostMapping("/")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER', 'ROLE_SUBSYSTEM')")
     public ResponseEntity<Void> saveCertificate(@RequestBody CreationCertificateDto dto){
         if(!certificateService.saveCertificate(dto)) return new ResponseEntity("Something went wrong", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("findAllByType/{type}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER', 'ROLE_SUBSYSTEM')")
     public ResponseEntity<List<CertificateBasicDto>> findAllByType(@PathVariable Integer type){
         return new ResponseEntity<>(certificateService.findAllByType(CertificateType.values()[type]),HttpStatus.OK);
     }
 
     @GetMapping("findById/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER', 'ROLE_SUBSYSTEM')")
     public ResponseEntity<CertificateDto> findById(@PathVariable Integer id){
         return new ResponseEntity<>(certificateService.findCertificateInfo(id),HttpStatus.OK);
     }
 
     @GetMapping("/download/{certificateId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER', 'ROLE_SUBSYSTEM')")
     public ResponseEntity<Void> downloadCertificate(@PathVariable Integer certificateId) {
         X509Certificate certificate = certificateService.findCertificate(certificateId);
         Certificate dbCert = certificateService.findDbCert(certificateId);
@@ -77,28 +76,32 @@ public class CertificateController {
     }
 
     @PutMapping("/{id}")
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> revokeCertificate(@PathVariable("id") Integer id){
         certificateService.revokeCertificate(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER', 'ROLE_SUBSYSTEM')")
     public ResponseEntity<List<FetchCertificateDTO>> getAll(){
         return new ResponseEntity<>(fetchCertificateService.getAllCertificates(), HttpStatus.OK);
     }
 
     @GetMapping("/organization")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER', 'ROLE_SUBSYSTEM')")
     public ResponseEntity<List<FetchCertificateDTO>> getByOrganization(@RequestParam("organization") String organization){
         return new ResponseEntity<>(fetchCertificateService.getAllCertificatesByOrganization(organization), HttpStatus.OK);
     }
 
     @GetMapping("/subject/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER', 'ROLE_SUBSYSTEM')")
     public ResponseEntity<List<FetchCertificateDTO>> getBySubject(@PathVariable Integer id){
         return new ResponseEntity<>(fetchCertificateService.getAllCertificatesBySubject(id), HttpStatus.OK);
     }
 
     @GetMapping("/hierarchy-above/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER', 'ROLE_SUBSYSTEM')")
     public ResponseEntity<List<FetchCertificateDTO>> getHierarchyAbove(@PathVariable Integer id){
         return new ResponseEntity<>(fetchCertificateService.getHierarchyAbove(id), HttpStatus.OK);
     }

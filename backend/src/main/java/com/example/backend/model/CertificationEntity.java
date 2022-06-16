@@ -59,7 +59,9 @@ public class CertificationEntity extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<Role> collection = new ArrayList<Role>();
+        collection.add(this.role);
+        return collection;
     }
 
     @Override

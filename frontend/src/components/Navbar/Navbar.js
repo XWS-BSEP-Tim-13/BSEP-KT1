@@ -16,7 +16,6 @@ function Navbar() {
 
     function handleLogOut() {
         dispatch(logout());
-        localStorage.setItem("token-ls", "");
     }
 
     return (

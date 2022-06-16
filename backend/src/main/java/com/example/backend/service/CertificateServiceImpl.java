@@ -5,7 +5,6 @@ import com.example.backend.dto.CertificateDto;
 import com.example.backend.dto.CreationCertificateDto;
 import com.example.backend.dto.NewCertificateSubjectDTO;
 import com.example.backend.enums.CertificateStatus;
-import com.example.backend.dto.FetchCertificateDTO;
 import com.example.backend.enums.CertificateType;
 import com.example.backend.enums.EntityRole;
 import com.example.backend.exception.CertificateAlreadyRevokedException;
@@ -67,7 +66,7 @@ public class CertificateServiceImpl implements CertificateService {
             issuerKeyStorePassword = keystorePassword;
         }
 
-        if(issuer.getSubject().getEntityRole().equals(EntityRole.ADMIN)){
+        if(issuer.getSubject().getEntityRole().equals(EntityRole.ROLE_ADMIN)){
             issuerKeyStorePassword = passwordsService.findPasswordByOrganization(issuer.getSubject().getOrganization());
         }
 
