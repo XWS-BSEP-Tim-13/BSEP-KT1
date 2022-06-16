@@ -12,8 +12,8 @@ import java.io.UnsupportedEncodingException;
 public interface AuthService {
     CertificationEntity registerCertificationEntity(RegistrationEntityDTO registrationEntity);
     void changePassword(ChangePasswordDto dto) throws Exception;
-    void activateAccount(String code);
     void generatePasswordlessCode(PasswordlessCodeRequestDto codeRequestDto) throws MessagingException, UnsupportedEncodingException;
     boolean canUserLogInPasswordlessly(PasswordlessLoginRequestDto loginRequestDto);
     CertificationEntity findByEmail(String email);
+    String activateAccount(String code);
 }
