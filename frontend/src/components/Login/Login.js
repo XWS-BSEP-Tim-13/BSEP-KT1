@@ -28,7 +28,7 @@ function Login(props) {
             navigate("/home");
         })
         .catch(() => {
-            setLoginError("Wrong username or password! Try again.");
+            setLoginError("Wrong email or password! Try again.");
         })
     }
 
@@ -37,7 +37,7 @@ function Login(props) {
             <h1>Log in</h1>
             <form onSubmit={submitHandler} className={classes.form}>
                 <div className={classes.formItem}>
-                    <input type="text" required placeholder="Username" />
+                    <input type="text" required placeholder="Email" />
                 </div>
                 <div className={classes.formItem}>
                     <input type="password" required placeholder="Password" />

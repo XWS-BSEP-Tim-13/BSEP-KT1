@@ -3,6 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.dto.*;
 import com.example.backend.model.CertificationEntity;
 import com.example.backend.service.interfaces.AuthService;
+import com.example.backend.service.interfaces.CertificationEntityService;
 import com.example.backend.service.interfaces.ForgotPasswordTokenService;
 import com.example.backend.util.TokenUtils;
 import lombok.AllArgsConstructor;
@@ -37,9 +38,13 @@ public class AuthController {
 
     private final ForgotPasswordTokenService forgotPasswordTokenService;
 
+    private final CertificationEntityService certificationEntityService;
+
     @PostMapping("/login")
     public ResponseEntity<UserTokenState> createAuthenticationToken(
             @RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {
+        if(!certificationEntityService.findIsActiveByEmail(authenticationRequest.getEmail())) return new ResponseEntity("User not enabled!",HttpStatus.BAD_REQUEST);
+
         Authentication authentication=null;
         try {
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(

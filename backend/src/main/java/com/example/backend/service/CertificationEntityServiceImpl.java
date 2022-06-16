@@ -72,6 +72,11 @@ public class CertificationEntityServiceImpl implements CertificationEntityServic
         return ret;
     }
 
+    @Override
+    public Boolean findIsActiveByEmail(String email) {
+        return certificationEntityRepository.findIsActiveByEmail(email);
+    }
+
     private List<CertificateDto> getSuitableCertificates(List<Certificate> certificates){
         List<CertificateDto> ret = new ArrayList<>();
         for(com.example.backend.model.Certificate cert: certificates)

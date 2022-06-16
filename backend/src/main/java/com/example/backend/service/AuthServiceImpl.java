@@ -16,6 +16,7 @@ import com.example.backend.service.interfaces.EmailService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
         if(verificationData.isCodeUsed()) return  "This code has already been used.";
         if(verificationData.getExpiresAt().before(new Date())) return  "This code is expired.";
 
-        CertificationEntity certificationEntity = certificationEntityRepository.findByEmail(verificationData.getEmail());
+        CertificationEntity certificationEntity = certificationEntityRepository.findByEmailIncludingNotActive(verificationData.getEmail());
         if(certificationEntity == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "There is no user with this email.");
 
         certificationEntity.setActive(true);

@@ -13,4 +13,5 @@ public interface CertificationEntityService {
     List<CertificationEntity> findAllIssuers();
     List<CertificationEntity> findIssuersByOrganization(String organization);
     List<CertificateIssuerDTO> findSuitableIssuersForCertificateSigning(String organization);
+    Boolean findIsActiveByEmail(String email);
 }

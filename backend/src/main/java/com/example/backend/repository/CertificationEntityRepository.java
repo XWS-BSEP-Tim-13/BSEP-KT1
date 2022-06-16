@@ -16,9 +16,15 @@ public interface CertificationEntityRepository extends JpaRepository<Certificati
 
     CertificationEntity findByEmail(String email);
 
+    @Query("select e.isActive from CertificationEntity e where e.email = ?1")
+    Boolean findIsActiveByEmail(String email);
+
     @Query("select c from CertificationEntity c where c.entityRole in (?1,?2)")
     List<CertificationEntity> findAllIssuers(EntityRole root,EntityRole subsystem);
 
     @Query("select c from CertificationEntity c where c.organization = ?1")
     List<CertificationEntity> findAllIssuersByOrganization(String organization);
+
+    @Query(value = "SELECT * FROM certification_entity AS e WHERE e.email = ?1", nativeQuery = true)
+    CertificationEntity findByEmailIncludingNotActive(String email);
 }
