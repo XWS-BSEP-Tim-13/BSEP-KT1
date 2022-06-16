@@ -127,22 +127,16 @@ public class AuthController {
         return new ResponseEntity<>("Code successfully generated!", HttpStatus.OK);
     }
 
-//    @PostMapping("/passwordless-login")
-//    public ResponseEntity<UserTokenState> passwordlessLogin(@RequestBody JwtAuthenticationRequest authenticationRequest) {
-//        Authentication authentication = null;
-//        try {
-//            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-//                    authenticationRequest.getEmail(), authenticationRequest.getPassword()));
-//        } catch (DisabledException disabledException) {
-//            return new ResponseEntity("User not enabled!", HttpStatus.BAD_REQUEST);
-//        } catch (Exception ex) {
-//            return new ResponseEntity("Wrong email or password!", HttpStatus.BAD_REQUEST);
-//        }
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//        CertificationEntity user = (CertificationEntity) authentication.getPrincipal();
-//        String jwt = tokenUtils.generateToken(user.getEmail());
-//        int expiresIn = tokenUtils.getExpiredIn();
-//        return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, user.getEmail(), user.getCommonName(), user.getRole().getAuthority(), user.getOrganization()));
-//    }
+    @PostMapping("/passwordless-login")
+    public ResponseEntity<UserTokenState> passwordlessLogin(@RequestBody PasswordlessLoginRequestDto loginRequestDto) {
+
+        if(!authService.canUserLogInPasswordlessly(loginRequestDto)){
+            return new ResponseEntity("Wrong email or code!", HttpStatus.BAD_REQUEST);
+        }
+
+        CertificationEntity user = authService.findByEmail(loginRequestDto.getEmail());
+        String jwt = tokenUtils.generateToken(user.getEmail());
+        int expiresIn = tokenUtils.getExpiredIn();
+        return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, user.getEmail(), user.getCommonName(), user.getRole().getAuthority(), user.getOrganization()));
+    }
 }

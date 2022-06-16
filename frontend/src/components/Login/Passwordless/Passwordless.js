@@ -25,7 +25,7 @@ const Passwordless = ({navigateToLogin}) => {
             })
             .catch((err) => {
                 console.log(err.response.data);
-                setError(err.response.data.message);
+                setError(err.response.data);
             })
     }
 

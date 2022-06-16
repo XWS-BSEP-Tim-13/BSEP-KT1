@@ -6,6 +6,6 @@ export async function requestCode(codeRequest) {
 }
 
 export async function passwordlessLogin(loginRequest) {
-    const response = await axiosInstance.post('passwordless-login', loginRequest);
+    const response = await axiosInstance.post('auth/passwordless-login', loginRequest);
     return response;
 }

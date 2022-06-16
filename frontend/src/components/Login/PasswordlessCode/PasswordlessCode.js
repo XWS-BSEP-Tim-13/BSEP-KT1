@@ -24,15 +24,12 @@ const PasswordlessCode = ({navigateToLogin, email}) => {
             code: data.code
         }
         passwordlessLogin(loginRequest).then((res) => {
-            localStorage.setItem("token-ls", res.data.token);
+            localStorage.setItem("token-ls", res.data.accessToken);
             dispatch(login(res.data))
             navigate('/home');
         }).catch((err) => {
-            console.log(err.response.data);
-            if (err.response.data.message === 'bad code')
-                setError("Incorrect code.");
-            if (err.response.data.message === 'expired code')
-                setError("Code expired.");
+            setError(err.response.data);
+
         })
     }
 

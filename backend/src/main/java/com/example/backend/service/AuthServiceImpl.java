@@ -136,9 +136,16 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void passwordlessLogin(PasswordlessLoginRequestDto loginRequestDto) {
-        CertificationEntity entity = certificationEntityRepository.findByEmail(loginRequestDto.getEmail());
+    public boolean canUserLogInPasswordlessly(PasswordlessLoginRequestDto loginRequestDto) {
+        PasswordlessCredentials credentials = passwordlessCredentialsRepository.findByEmail(loginRequestDto.getEmail());
+        if(!credentials.getCode().equals(loginRequestDto.getCode())) return false;
 
+        return true;
+    }
+
+    @Override
+    public CertificationEntity findByEmail(String email) {
+        return certificationEntityRepository.findByEmail(email);
     }
 
     private String getRandomNumberString() {

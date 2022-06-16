@@ -14,5 +14,6 @@ public interface AuthService {
     void changePassword(ChangePasswordDto dto) throws Exception;
     void activateAccount(String code);
     void generatePasswordlessCode(PasswordlessCodeRequestDto codeRequestDto) throws MessagingException, UnsupportedEncodingException;
-    void passwordlessLogin(PasswordlessLoginRequestDto loginRequestDto);
+    boolean canUserLogInPasswordlessly(PasswordlessLoginRequestDto loginRequestDto);
+    CertificationEntity findByEmail(String email);
 }
