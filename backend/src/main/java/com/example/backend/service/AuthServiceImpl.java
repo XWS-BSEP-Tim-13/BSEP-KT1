@@ -138,7 +138,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean canUserLogInPasswordlessly(PasswordlessLoginRequestDto loginRequestDto) {
         PasswordlessCredentials credentials = passwordlessCredentialsRepository.findByEmail(loginRequestDto.getEmail());
-        if(!credentials.getCode().equals(loginRequestDto.getCode())) return false;
+        if(!credentials.getCode().equals(loginRequestDto.getCode()) || credentials.getExpiringDate().before(new Date())) return false;
 
         return true;
     }
