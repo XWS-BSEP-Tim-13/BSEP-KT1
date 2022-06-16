@@ -17,11 +17,13 @@ export const userSlice = createSlice({
         login: (state, action) => {
             state.value = action.payload;
             localStorage.setItem("user", JSON.stringify(action.payload));
+            localStorage.setItem("token-ls", action.payload.accessToken);
         },
 
         logout: (state) => {
             state.value = initialStateValue;
             localStorage.setItem("user", JSON.stringify(initialStateValue));
+            localStorage.setItem("token-ls", "");
         },
     },
 });

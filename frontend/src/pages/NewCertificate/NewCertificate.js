@@ -4,6 +4,7 @@ import { faCertificate } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { axiosInstance } from "../../api/AxiosInstance";
 import axios from "axios";
 
 import classes from './NewCertificate.module.css';
@@ -27,13 +28,8 @@ function NewCertificate() {
     const certificateType = useRef();
 
     useEffect(() => {
-        axios.get(`http://localhost:8081/certification-entity/subjects`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                'Authorization': `Bearer ${user.accessToken}`
-            },
-        }).then((response) => {
+        axiosInstance.get(`http://localhost:8081/certification-entity/subjects`)
+        .then((response) => {
             setPossibleSubjects(response.data);
         })
 
