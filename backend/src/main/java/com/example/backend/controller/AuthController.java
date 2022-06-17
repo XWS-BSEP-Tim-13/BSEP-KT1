@@ -139,9 +139,9 @@ public class AuthController {
         catch (ResponseStatusException e){
             return new ResponseEntity<>("Certification entity with provided email does not exist.", HttpStatus.BAD_REQUEST);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            return new ResponseEntity<>("Error in mailing.", HttpStatus.BAD_REQUEST);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            return new ResponseEntity<>("Unsupported encoding.", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Code successfully generated!", HttpStatus.OK);
     }

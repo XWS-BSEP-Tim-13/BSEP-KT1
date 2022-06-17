@@ -5,6 +5,7 @@ on:
       - main
       - develop
       - feature/sonarcloud
+      - bugfix/sonarcloud
 jobs:
   build:
     name: Build
