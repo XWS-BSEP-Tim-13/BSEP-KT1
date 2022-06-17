@@ -20,7 +20,7 @@ function Registration(props) {
     const isSubsystemInputRef = useRef();
 
     useEffect(() => {
-        axios.get('http://api.worldbank.org/v2/country?format=json')
+        axios.get('https://api.worldbank.org/v2/country?format=json')
             .then((response) => {
                 setCountries(response.data[1]);
             })

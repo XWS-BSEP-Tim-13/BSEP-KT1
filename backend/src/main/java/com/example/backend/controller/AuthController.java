@@ -95,7 +95,7 @@ public class AuthController {
     public ResponseEntity<Void> forgotPasswordRedirect(@PathVariable String token){
         try {
             String email=forgotPasswordTokenService.checkToken(token);
-            URI frontend = new URI("http://localhost:3000/change-password/"+token);
+            URI frontend = new URI("https://localhost:3000/change-password/"+token);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setLocation(frontend);
             return new ResponseEntity<>(httpHeaders, HttpStatus.TEMPORARY_REDIRECT);
