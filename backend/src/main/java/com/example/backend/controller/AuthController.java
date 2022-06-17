@@ -24,6 +24,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequestMapping("auth")
@@ -128,6 +129,8 @@ public class AuthController {
             return new ResponseEntity<>("Error in mailing.", HttpStatus.BAD_REQUEST);
         } catch (UnsupportedEncodingException e) {
             return new ResponseEntity<>("Unsupported encoding.", HttpStatus.BAD_REQUEST);
+        } catch (NoSuchAlgorithmException e) {
+            return new ResponseEntity<>("Unsupported algorithm.", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Code successfully generated!", HttpStatus.OK);
     }
