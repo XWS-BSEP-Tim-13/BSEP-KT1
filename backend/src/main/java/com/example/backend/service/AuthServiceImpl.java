@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
@@ -103,7 +105,7 @@ public class AuthServiceImpl implements AuthService {
         return verificationData;
     }
 
-    public void generatePasswordlessCode(PasswordlessCodeRequestDto codeRequestDto) throws MessagingException, UnsupportedEncodingException {
+    public void generatePasswordlessCode(PasswordlessCodeRequestDto codeRequestDto) throws MessagingException, UnsupportedEncodingException, NoSuchAlgorithmException {
         CertificationEntity entity = certificationEntityRepository.findByEmail(codeRequestDto.getEmail());
         if(entity == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot find account with this email.");
@@ -148,9 +150,9 @@ public class AuthServiceImpl implements AuthService {
         return certificationEntityRepository.findByEmail(email);
     }
 
-    private String getRandomNumberString() {
-        Random rnd = new Random();
-        int number = rnd.nextInt(999999);
+    private String getRandomNumberString() throws NoSuchAlgorithmException {
+        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+        int number = sr.nextInt(999999);
         return String.format("%06d", number);
     }
 
