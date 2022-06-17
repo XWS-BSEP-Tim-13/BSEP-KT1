@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+  pki_service:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+      target: ${TARGET:-pkiBackendRuntime}
+    container_name: pki
+    restart: on-failure
+    ports:
+      - 8081:8081
+    environment:
+      PKI_PORT: ${PKI_PORT}
+      PKI_DB_URL: ${PKI_DB_URL}
+      PKI_USER: ${PKI_DB_USER}
+      PKI_PASS: ${PKI_DB_PASS}
+      KEY_STORE_PASSWORDS: ${KEY_STORE_PASSWORDS}
+      CERTIFICATE_FOLDER: ${CERTIFICATE_FOLDER}
+    volumes:
+      - type: bind
+        source: ./passwords
+        target: /app/passwords
+    depends_on: 
+      - pki_db
+    
+  pki_db:
+    image: postgres:14.1
+    container_name: pki_db
+    restart: always
+    environment:
+       POSTGRES_USER: ${PKI_DB_USER}
+       POSTGRES_PASSWORD: ${PKI_DB_PASS}
+       POSTGRES_DB: ${PKI_DB_NAME}
+       POSTGRES_HOST: ${PKI_DB_HOST}

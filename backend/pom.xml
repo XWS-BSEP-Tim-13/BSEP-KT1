@@ -114,6 +114,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>pki-exe</finalName>
 	</build>
 
 </project>
