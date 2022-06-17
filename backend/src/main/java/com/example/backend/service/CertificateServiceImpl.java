@@ -269,7 +269,10 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     public Boolean isCertificateRevoked(Integer id) {
-        com.example.backend.model.Certificate certificateToRevoke = certificationRepostory.findById(id).get();
-        return certificateToRevoke.getCertificateStatus().equals(CertificateStatus.REVOKED);
+        Optional<com.example.backend.model.Certificate> certificateToRevoke = certificationRepostory.findById(id);
+        if(certificateToRevoke.isPresent())
+            return certificateToRevoke.get().getCertificateStatus().equals(CertificateStatus.REVOKED);
+
+        return false;
     }
 }
