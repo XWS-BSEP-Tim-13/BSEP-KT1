@@ -84,9 +84,9 @@ public class CertificateController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Void> revokeCertificate(@PathVariable("id") Integer id){
+    public ResponseEntity<Void> revokeCertificate(@PathVariable("id") Integer id, Principal principal){
         certificateService.revokeCertificate(id);
-        //LOGGER_INFO.info("User: " + principal.getName() + " | Action: RC");
+        LOGGER_INFO.info("User: " + principal.getName() + " | Action: RC");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
