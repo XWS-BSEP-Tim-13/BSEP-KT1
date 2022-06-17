@@ -86,7 +86,7 @@ public class CertificateController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> revokeCertificate(@PathVariable("id") Integer id){
         certificateService.revokeCertificate(id);
-        LOGGER_INFO.info("User: " + principal.getName() + " | Action: RC");
+        //LOGGER_INFO.info("User: " + principal.getName() + " | Action: RC");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
