@@ -1,6 +1,5 @@
 
-
-function Homepage(props) {
+function Homepage() {
 
     return (
         <div>

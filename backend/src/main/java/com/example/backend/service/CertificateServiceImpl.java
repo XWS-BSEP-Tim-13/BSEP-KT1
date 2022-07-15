@@ -5,7 +5,6 @@ import com.example.backend.dto.CertificateDto;
 import com.example.backend.dto.CreationCertificateDto;
 import com.example.backend.dto.NewCertificateSubjectDTO;
 import com.example.backend.enums.CertificateStatus;
-import com.example.backend.dto.FetchCertificateDTO;
 import com.example.backend.enums.CertificateType;
 import com.example.backend.enums.EntityRole;
 import com.example.backend.exception.CertificateAlreadyRevokedException;
@@ -67,7 +66,7 @@ public class CertificateServiceImpl implements CertificateService {
             issuerKeyStorePassword = keystorePassword;
         }
 
-        if(issuer.getSubject().getEntityRole().equals(EntityRole.ADMIN)){
+        if(issuer.getSubject().getEntityRole().equals(EntityRole.ROLE_ADMIN)){
             issuerKeyStorePassword = passwordsService.findPasswordByOrganization(issuer.getSubject().getOrganization());
         }
 
@@ -253,7 +252,7 @@ public class CertificateServiceImpl implements CertificateService {
 
     public Boolean revokeCertificate(Integer id){
         com.example.backend.model.Certificate certificateToRevoke = certificationRepostory.findById(id).get();
-        if(isCertificateRevoked(certificateToRevoke))
+        if(isCertificateRevoked(id))
             throw new CertificateAlreadyRevokedException();
 
         certificateToRevoke.setCertificateStatus(CertificateStatus.REVOKED);
@@ -269,7 +268,11 @@ public class CertificateServiceImpl implements CertificateService {
                 revokeCertificate(certificate.getId());
     }
 
-    private boolean isCertificateRevoked(Certificate certificateToRevoke) {
-        return certificateToRevoke.getCertificateStatus().equals(CertificateStatus.REVOKED);
+    public Boolean isCertificateRevoked(Integer id) {
+        Optional<com.example.backend.model.Certificate> certificateToRevoke = certificationRepostory.findById(id);
+        if(certificateToRevoke.isPresent())
+            return certificateToRevoke.get().getCertificateStatus().equals(CertificateStatus.REVOKED);
+
+        return false;
     }
 }

@@ -22,6 +22,7 @@ public interface CertificateService {
     boolean saveCertificate(CreationCertificateDto dto);
     List<CertificateBasicDto> findAllByType(CertificateType type);
     CertificateDto findCertificateInfo(Integer certificateId);
+    Boolean isCertificateRevoked(Integer id);
     Boolean revokeCertificate(Integer id);
     Set<NewCertificateSubjectDTO> getPossibleSubjectsForNewCertificate();
     boolean isCertificateValidByDate(Integer certificateId);

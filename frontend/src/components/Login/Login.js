@@ -28,7 +28,7 @@ function Login(props) {
             navigate("/home");
         })
         .catch(() => {
-            setLoginError("Wrong username or password! Try again.");
+            setLoginError("Wrong email or password! Try again.");
         })
     }
 
@@ -37,15 +37,21 @@ function Login(props) {
             <h1>Log in</h1>
             <form onSubmit={submitHandler} className={classes.form}>
                 <div className={classes.formItem}>
-                    <input type="text" required placeholder="Username" />
+                    <input type="text" required placeholder="Email" />
                 </div>
                 <div className={classes.formItem}>
                     <input type="password" required placeholder="Password" />
                 </div>
                 <p className={classes.errorMessage}>{loginError}</p>
-
+                
+                <a href="/#" className={classes.registerLink} onClick={() => props.navigateToForgotPasswordPage()} >
+                    Forgot password?
+                </a>
                 <button className={classes.buttonLogIn}>Log in</button>
-                <a href="/#" className={classes.registerLink} onClick={() => props.changePage(false)} >
+                <p className={classes.or}> or </p>
+                <div className={classes.line}> </div>
+                <button className={classes.buttonLogInViaEmail} onClick={() => props.navigateToPasswordless(true)}>Log in via email</button>
+                <a href="/#" className={classes.registerLink} onClick={() => props.navigateToRegister()} >
                     Don't have an account? Register here.
                 </a>
             </form>

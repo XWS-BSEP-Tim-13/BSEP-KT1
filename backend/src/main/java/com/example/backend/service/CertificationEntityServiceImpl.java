@@ -3,7 +3,6 @@ package com.example.backend.service;
 import com.example.backend.dto.CertificateDto;
 import com.example.backend.dto.CertificateIssuerDTO;
 import com.example.backend.dto.NewCertificateSubjectDTO;
-import com.example.backend.enums.CertificateStatus;
 import com.example.backend.enums.CertificateType;
 import com.example.backend.enums.EntityRole;
 import com.example.backend.model.Certificate;
@@ -54,7 +53,7 @@ public class CertificationEntityServiceImpl implements CertificationEntityServic
 
     @Override
     public List<CertificationEntity> findAllIssuers() {
-        return certificationEntityRepository.findAllIssuers(EntityRole.SUBSYSTEM,EntityRole.ADMIN);
+        return certificationEntityRepository.findAllIssuers(EntityRole.ROLE_SUBSYSTEM,EntityRole.ROLE_ADMIN);
     }
 
     @Override
@@ -70,6 +69,11 @@ public class CertificationEntityServiceImpl implements CertificationEntityServic
             ret.add(CertificateIssuerDTO.builder().commonName(entity.getCommonName()).certificates(getSuitableCertificates(entity.getCertificates())).id(entity.getId()).email(entity.getEmail()).build());
         }
         return ret;
+    }
+
+    @Override
+    public Boolean findIsActiveByEmail(String email) {
+        return certificationEntityRepository.findIsActiveByEmail(email);
     }
 
     private List<CertificateDto> getSuitableCertificates(List<Certificate> certificates){

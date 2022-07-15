@@ -1,6 +1,5 @@
 package com.example.backend.util;
 
-import com.example.backend.dto.CreationCertificateDto;
 import com.example.backend.enums.CertificateStatus;
 import com.example.backend.enums.CertificateType;
 import com.example.backend.enums.EntityRole;
@@ -15,7 +14,6 @@ import com.example.backend.repository.RoleRepository;
 import com.example.backend.service.interfaces.KeystorePasswordsService;
 import lombok.AllArgsConstructor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -23,8 +21,6 @@ import org.springframework.stereotype.Component;
 import java.security.KeyPair;
 import java.security.Security;
 import java.security.cert.X509Certificate;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Component
@@ -60,11 +56,12 @@ public class DataLoader implements ApplicationRunner {
                 .countryCode("RS")
                 .email("a@a.com")
                 .organization("ADMIN")
-                .entityRole(EntityRole.ADMIN)
+                .entityRole(EntityRole.ROLE_ADMIN)
                 .password("$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW")
                 .organizationUnit("Katedra za automatiku")
                 .certificates(new ArrayList<>())
                 .role(adminRole)
+                .isActive(true)
                 .build();
         admin.setId(1);
 
@@ -73,24 +70,26 @@ public class DataLoader implements ApplicationRunner {
                 .countryCode("RS")
                 .email("u1@u.com")
                 .organization("FTN")
-                .entityRole(EntityRole.USER)
+                .entityRole(EntityRole.ROLE_USER)
                 .password("$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW")
                 .organizationUnit("Katedra za informatiku")
                 .certificates(new ArrayList<>())
                 .role(userRole)
+                .isActive(true)
                 .build();
         user1.setId(2);
 
         CertificationEntity user2 = CertificationEntity.builder()
                 .commonName("User Two")
                 .countryCode("RS")
-                .email("u2@u.com")
+                .email("srdjansukovic@gmail.com")
                 .organization("FTN")
-                .entityRole(EntityRole.USER)
+                .entityRole(EntityRole.ROLE_USER)
                 .password("$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW")
                 .organizationUnit("Katedra za racunarstvo")
                 .certificates(new ArrayList<>())
                 .role(userRole)
+                .isActive(true)
                 .build();
         user2.setId(3);
 
@@ -99,11 +98,12 @@ public class DataLoader implements ApplicationRunner {
                 .countryCode("RS")
                 .email("u3@u.com")
                 .organization("PMF")
-                .entityRole(EntityRole.SUBSYSTEM)
+                .entityRole(EntityRole.ROLE_SUBSYSTEM)
                 .password("$2a$10$3kfQZW0qQFJIlfDcadR9UOmPwUDDz4wwkcxxAi1aQmfqZqRxAU/FW")
                 .organizationUnit("Katedra za matematiku")
                 .certificates(new ArrayList<>())
                 .role(subsystemRole)
+                .isActive(true)
                 .build();
         user3.setId(4);
 

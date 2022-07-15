@@ -3,6 +3,7 @@ package com.example.backend.model;
 import com.example.backend.enums.EntityRole;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Where(clause = "is_active = true")
 public class CertificationEntity extends BaseEntity implements UserDetails {
 
     @Column(nullable = false)
@@ -43,6 +45,9 @@ public class CertificationEntity extends BaseEntity implements UserDetails {
 
     private String countryCode;
 
+    @Column(name = "is_active")
+    private boolean isActive = false;
+
     private EntityRole entityRole;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
@@ -54,7 +59,9 @@ public class CertificationEntity extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<Role> collection = new ArrayList<Role>();
+        collection.add(this.role);
+        return collection;
     }
 
     @Override

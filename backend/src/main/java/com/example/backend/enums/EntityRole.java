@@ -1,7 +1,7 @@
 package com.example.backend.enums;
 
 public enum EntityRole {
-    ADMIN,
-    SUBSYSTEM,
-    USER
+    ROLE_ADMIN,
+    ROLE_SUBSYSTEM,
+    ROLE_USER
 }

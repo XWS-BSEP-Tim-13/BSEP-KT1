@@ -65,23 +65,55 @@ h1 {
 }
 
 .errorMessage {
-    color: rgb(195, 0, 0);
+    color: #cc1313;
     font-size: 0.9rem;
     margin: auto;
+}
+
+.buttonLogInViaEmail {
+    width: 45%;
+    align-self: center;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    height: 2.5rem;
+    font-size: 1rem;
+    background-color: white;
+    color: #356c91;
+    border-color: #356c91;
+    border-width: 0.5px;
+    border-radius: 25px;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.or {
+    align-self: center;
+    position: relative;
+    background: #fff;
+    color: #356c91;
+    padding: 0 1.5rem;
+    top: 0.7rem;
+    margin: 0;
+    margin-top: -0.5rem;
+}
+
+.line {
+    height: 0.5px;
+    background: #356c91;
+    width: 90%;
+    align-self: center;
 }
 
 @media (max-width: 60rem) {
     h1 {
         font-size: 3.5rem;
     }
-
     .formItem input {
         width: 19rem;
     }
 }
 
 @media (max-width: 40rem) {
-
     .login {
         width: 100%;
         margin-top: 2vh;

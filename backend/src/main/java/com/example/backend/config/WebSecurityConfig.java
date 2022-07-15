@@ -20,7 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // BCrypt po defalt-u radi 10 rundi hesiranja prosledjene vrednosti.
     @Bean
@@ -63,9 +63,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 
                 .authorizeRequests().antMatchers("/auth/**").permitAll()		// /auth/**
-                .antMatchers("/h2-console/**").permitAll()	// /h2-console/** ako se koristi H2 baza)
-                .antMatchers("/certificate/**").permitAll()
-                .antMatchers("/certification-entity/**").permitAll()
                 .anyRequest().authenticated().and()
 
                 .cors().and()
